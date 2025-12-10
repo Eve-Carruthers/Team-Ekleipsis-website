@@ -667,22 +667,13 @@ export default function useThreeStage({
       ringMaterial.color.set(isLight ? 0x888888 : 0x444444);
 
       // ===== VIEW MODE (Engineering) =====
-      // Check phase first - hide car completely in sponsors/team phases
-      const currentPhaseForView = phaseRef.current;
-      const shouldHideCar = currentPhaseForView === "sponsors" || currentPhaseForView === "team";
-
       const mode = viewModeRef.current || "render";
       if (sceneObjectsRef.current.carMesh) {
         const mesh = sceneObjectsRef.current.carMesh;
         const wire = sceneObjectsRef.current.wireframe;
         const points = sceneObjectsRef.current.vertexPoints;
 
-        // Force hide in sponsors/team phases
-        if (shouldHideCar) {
-          mesh.visible = false;
-          if (wire) wire.visible = false;
-          if (points) points.visible = false;
-        } else if (mode === "render") {
+        if (mode === "render") {
           mesh.material.opacity = 1;
           mesh.material.transparent = false;
           mesh.visible = true;
@@ -948,7 +939,7 @@ export default function useThreeStage({
         }
       }
       else if (currentPhase === "sponsors" || currentPhase === "team") {
-        // Hide EVERYTHING for sponsors and team sections - completely blank 3D scene
+        // Hide car completely for sponsors and team sections
         if (sceneObjectsRef.current.carMesh) {
           sceneObjectsRef.current.carMesh.visible = false;
         }
@@ -961,18 +952,6 @@ export default function useThreeStage({
         podiumGroup.visible = false;
         windTunnelGroup.visible = false;
         if (particles) particles.visible = false;
-        // Hide ground plane too
-        ground.visible = false;
-        // Hide car container/group
-        carContainer.visible = false;
-        carGroup.visible = false;
-        // Turn off all lights
-        spotLight.intensity = 0;
-      } else {
-        // Restore ground visibility for other phases
-        ground.visible = true;
-        carContainer.visible = true;
-        carGroup.visible = true;
       }
 
       // Camera looks at where the car is positioned (with global offset)
