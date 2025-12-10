@@ -201,6 +201,37 @@ export default function useThreeStage({
     rimLight.position.set(0, 5, -15);
     scene.add(rimLight);
 
+    // Interactive Spotlight
+    const spotLight = new THREE.SpotLight(0xffffff, 100);
+    spotLight.position.set(0, 10, 5);
+    spotLight.angle = Math.PI / 6;
+    spotLight.penumbra = 0.5;
+    spotLight.decay = 2;
+    spotLight.distance = 50;
+    spotLight.castShadow = true;
+    spotLight.shadow.bias = -0.0001;
+    scene.add(spotLight);
+    scene.add(spotLight.target);
+
+    // Mouse tracking for spotlight
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const planeIntersect = new THREE.Vector3();
+
+    const updateSpotlight = (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(plane, planeIntersect);
+      
+      // Smoothly move target
+      // We'll do the actual movement in the animate loop using a target vector
+    };
+    window.addEventListener('mousemove', updateSpotlight);
+
+
     // ========== GROUND / FLOOR ==========
     const groundMaterial = new THREE.MeshStandardMaterial({
       color: 0x111111,
@@ -546,6 +577,7 @@ export default function useThreeStage({
 
     // Store car center for pin positioning
     let carCenterScreen = { x: 0, y: 0 };
+    const spotlightTargetPos = new THREE.Vector3();
 
     function updatePins() {
       const currentPhase = phaseRef.current;
@@ -733,6 +765,23 @@ export default function useThreeStage({
       const carVisible = currentPhase !== "sponsors" && currentPhase !== "team";
       if (sceneObjectsRef.current.carMesh && carVisible) {
         sceneObjectsRef.current.carMesh.visible = true;
+      }
+
+      // Update Spotlight
+      if (currentPhase === 'hero' || currentPhase === 'engineering' || currentPhase === 'garage') {
+         spotLight.intensity = 100;
+         // Lerp the spotlight target to the mouse position on the ground plane
+         // The planeIntersect is updated in the mousemove listener, but we need to do it here properly if camera moves
+         raycaster.setFromCamera(mouse, camera);
+         if (raycaster.ray.intersectPlane(plane, planeIntersect)) {
+             spotlightTargetPos.lerp(planeIntersect, 0.1);
+             spotLight.target.position.copy(spotlightTargetPos);
+             // Move the light source slightly to follow but stay above
+             spotLight.position.x += (planeIntersect.x - spotLight.position.x) * 0.05;
+             spotLight.position.z += (planeIntersect.z + 5 - spotLight.position.z) * 0.05;
+         }
+      } else {
+         spotLight.intensity = 0; // Hide in other phases
       }
 
       // Car rotation based on phase
@@ -930,6 +979,7 @@ export default function useThreeStage({
     // ========== CLEANUP ==========
     return () => {
       window.removeEventListener("resize", onResize);
+      window.removeEventListener('mousemove', updateSpotlight);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       renderer.dispose();
     };

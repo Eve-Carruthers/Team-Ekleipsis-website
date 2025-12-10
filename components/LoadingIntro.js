@@ -6,24 +6,25 @@ export default function LoadingIntro() {
   const [loadingText, setLoadingText] = useState("INITIALIZING");
 
   useEffect(() => {
-    const texts = ["INITIALIZING", "LOADING ASSETS", "PREPARING CAR", "ALMOST READY"];
+    const texts = ["INITIALIZING SYSTEMS", "LOADING 3D ASSETS", "PREPARING CAR MODEL", "CALIBRATING CFD", "ALMOST READY"];
     let current = 0;
 
     const interval = setInterval(() => {
       setProgress(prev => {
-        const next = prev + Math.random() * 15 + 5;
+        const next = prev + Math.random() * 3 + 1.5;
         if (next >= 100) {
           clearInterval(interval);
           setLoadingText("READY");
           return 100;
         }
         // Update text at certain thresholds
-        if (next > 25 && current === 0) { current = 1; setLoadingText(texts[1]); }
-        if (next > 50 && current === 1) { current = 2; setLoadingText(texts[2]); }
-        if (next > 75 && current === 2) { current = 3; setLoadingText(texts[3]); }
+        if (next > 20 && current === 0) { current = 1; setLoadingText(texts[1]); }
+        if (next > 40 && current === 1) { current = 2; setLoadingText(texts[2]); }
+        if (next > 60 && current === 2) { current = 3; setLoadingText(texts[3]); }
+        if (next > 80 && current === 3) { current = 4; setLoadingText(texts[4]); }
         return next;
       });
-    }, 150);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

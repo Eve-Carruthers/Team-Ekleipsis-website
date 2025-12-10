@@ -62,7 +62,7 @@ function App() {
 
   useEffect(() => {
     applyPreset("normal");
-    const timer = setTimeout(() => setShowIntro(false), 1200);
+    const timer = setTimeout(() => setShowIntro(false), 4500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -70,12 +70,12 @@ function App() {
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = Math.min(1, Math.max(0, window.scrollY / (max || 1)));
-      // Compressed early sections - aero appears much earlier
-      if (p < 0.06) setPhase("hero");
-      else if (p < 0.16) setPhase("engineering");
-      else if (p < 0.26) setPhase("garage");
-      else if (p < 0.45) setPhase("aero");
-      else if (p < 0.70) setPhase("sponsors");
+      // Extended aero section - stays visible much longer
+      if (p < 0.05) setPhase("hero");
+      else if (p < 0.12) setPhase("engineering");
+      else if (p < 0.18) setPhase("garage");
+      else if (p < 0.55) setPhase("aero");
+      else if (p < 0.75) setPhase("sponsors");
       else setPhase("team");
     };
     window.addEventListener("scroll", onScroll);
