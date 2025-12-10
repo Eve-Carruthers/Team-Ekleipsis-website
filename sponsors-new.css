@@ -1372,3 +1372,284 @@
         flex-direction: column;
     }
 }
+
+/* =============================================
+   LOADING SCREEN
+   ============================================= */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* EK3 Watermark */
+.loading-watermark {
+    position: absolute;
+    font-family: var(--font-display);
+    font-size: clamp(200px, 40vw, 500px);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03);
+    letter-spacing: -10px;
+    user-select: none;
+    pointer-events: none;
+    animation: watermarkPulse 4s ease-in-out infinite;
+}
+
+@keyframes watermarkPulse {
+    0%, 100% { opacity: 0.03; transform: scale(1); }
+    50% { opacity: 0.06; transform: scale(1.02); }
+}
+
+/* Eclipse Rings */
+.eclipse-rings {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eclipse-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    animation: ringRotate 8s linear infinite;
+}
+
+.eclipse-ring.ring-1 {
+    width: 280px;
+    height: 280px;
+    border-color: rgba(62, 12, 112, 0.4);
+    animation-duration: 8s;
+}
+
+.eclipse-ring.ring-2 {
+    width: 320px;
+    height: 320px;
+    border-color: rgba(248, 190, 25, 0.3);
+    animation-duration: 12s;
+    animation-direction: reverse;
+}
+
+.eclipse-ring.ring-3 {
+    width: 360px;
+    height: 360px;
+    border-color: rgba(139, 92, 246, 0.2);
+    animation-duration: 16s;
+}
+
+@keyframes ringRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Add gradient arc to rings */
+.eclipse-ring::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    border-radius: 2px;
+    transform: translateX(-50%);
+}
+
+.eclipse-ring.ring-1::before { background: linear-gradient(90deg, transparent, #3E0C70, transparent); }
+.eclipse-ring.ring-2::before { background: linear-gradient(90deg, transparent, #F8BE19, transparent); }
+.eclipse-ring.ring-3::before { background: linear-gradient(90deg, transparent, #8B5CF6, transparent); }
+
+/* Loading Content */
+.loading-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Logo */
+.loading-logo-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-glow {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(62, 12, 112, 0.5) 0%, rgba(248, 190, 25, 0.2) 40%, transparent 70%);
+    border-radius: 50%;
+    animation: logoGlow 3s ease-in-out infinite;
+    filter: blur(30px);
+}
+
+@keyframes logoGlow {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.loading-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    animation: logoFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(62, 12, 112, 0.5));
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Title */
+.loading-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 700;
+    letter-spacing: 8px;
+    color: white;
+    margin: 0;
+    text-shadow: 0 0 40px rgba(62, 12, 112, 0.5);
+    animation: titleFadeIn 1s ease-out 0.3s both;
+}
+
+@keyframes titleFadeIn {
+    from { opacity: 0; transform: translateY(20px); letter-spacing: 20px; }
+    to { opacity: 1; transform: translateY(0); letter-spacing: 8px; }
+}
+
+/* Tagline */
+.loading-tagline {
+    font-family: var(--font-body);
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    animation: taglineFadeIn 1s ease-out 0.6s both;
+}
+
+@keyframes taglineFadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.5; }
+}
+
+/* Progress Bar */
+.loading-progress-wrap {
+    width: 280px;
+    margin-top: 20px;
+    animation: progressFadeIn 1s ease-out 0.8s both;
+}
+
+@keyframes progressFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.loading-progress-track {
+    position: relative;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    overflow: visible;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3E0C70, #F8BE19);
+    border-radius: 999px;
+    transition: width 0.15s ease-out;
+    box-shadow: 0 0 20px rgba(248, 190, 25, 0.5);
+}
+
+.loading-progress-glow {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    background: #F8BE19;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(10px);
+    opacity: 0.8;
+    transition: left 0.15s ease-out;
+}
+
+.loading-progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.loading-text {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.loading-percent {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #F8BE19;
+    font-weight: 600;
+}
+
+/* Bottom Accent Line */
+.loading-accent-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #3E0C70, #F8BE19, #3E0C70, transparent);
+    animation: accentSlide 2s ease-in-out infinite;
+}
+
+@keyframes accentSlide {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* Responsive Loading Screen */
+@media (max-width: 600px) {
+    .loading-watermark {
+        font-size: 150px;
+    }
+
+    .eclipse-rings {
+        transform: scale(0.7);
+    }
+
+    .loading-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .loading-title {
+        font-size: 20px;
+        letter-spacing: 4px;
+    }
+
+    .loading-tagline {
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    .loading-progress-wrap {
+        width: 220px;
+    }
+}
