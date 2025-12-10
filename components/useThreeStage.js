@@ -761,10 +761,16 @@ export default function useThreeStage({
         camera.position.lerp(targetCameraPos, 0.02);
       }
 
-      // Ensure car visibility is restored for normal phases
+      // Hide car in sponsors and team phases, show in others
       const carVisible = currentPhase !== "sponsors" && currentPhase !== "team";
-      if (sceneObjectsRef.current.carMesh && carVisible) {
-        sceneObjectsRef.current.carMesh.visible = true;
+      if (sceneObjectsRef.current.carMesh) {
+        sceneObjectsRef.current.carMesh.visible = carVisible;
+      }
+      if (sceneObjectsRef.current.wireframe) {
+        sceneObjectsRef.current.wireframe.visible = carVisible;
+      }
+      if (sceneObjectsRef.current.vertexPoints) {
+        sceneObjectsRef.current.vertexPoints.visible = carVisible;
       }
 
       // Update Spotlight
