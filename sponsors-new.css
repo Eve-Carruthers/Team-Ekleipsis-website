@@ -1653,3 +1653,136 @@
         width: 220px;
     }
 }
+
+/* =============================================
+   POST-AERO SECTIONS - SOLID BACKGROUNDS & ENHANCED UI
+   ============================================= */
+
+/* Override for sponsors section - ensure solid background */
+.sponsors-section-new {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%) !important;
+    position: relative;
+    z-index: 25;
+}
+
+/* Team section solid background */
+.team-section {
+    background: linear-gradient(180deg, #ffffff 0%, #f5f5f7 50%, #ffffff 100%) !important;
+    position: relative;
+    z-index: 25;
+}
+
+/* Budget section solid background */
+.budget-section {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%, #f0f0f2 100%) !important;
+    position: relative;
+    z-index: 25;
+}
+
+/* Section divider - decorative line between sections */
+.sponsors-section-new::before,
+.team-section::before,
+.budget-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--purple), var(--gold), var(--purple), transparent);
+    border-radius: 2px;
+}
+
+/* Enhanced section headers */
+.sponsors-header-new h2,
+.team-title,
+.budget-header h2 {
+    position: relative;
+    display: inline-block;
+}
+
+.sponsors-header-new h2::after,
+.team-title::after,
+.budget-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple), var(--gold));
+    border-radius: 1px;
+}
+
+/* Card hover enhancements */
+.sponsor-card-new,
+.team-card,
+.budget-card,
+.resource-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sponsor-card-new:hover,
+.budget-card:hover,
+.resource-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(62, 12, 112, 0.15);
+}
+
+/* Subtle background pattern for visual interest */
+.sponsors-section-new::after,
+.team-section::after,
+.budget-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(62, 12, 112, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(248, 190, 25, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Animated accent for section numbers */
+.section-num,
+.team-header .section-num {
+    background: linear-gradient(135deg, var(--purple), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* Enhanced team cards grid */
+.team-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    justify-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Better visual hierarchy for team cards */
+.team-card {
+    background: linear-gradient(145deg, #ffffff, #f5f5f7);
+    border: 1px solid rgba(62, 12, 112, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.team-card:hover {
+    border-color: rgba(62, 12, 112, 0.2);
+    box-shadow: 0 20px 60px rgba(62, 12, 112, 0.12);
+}
+
+/* Footer enhancement */
+footer, .footer {
+    background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%) !important;
+    position: relative;
+    z-index: 25;
+}
