@@ -111,7 +111,7 @@ She provides realistic project deadlines from a creative perspective and identif
 const socialLinks = [
   { platform: "Instagram", handle: "@Ekleipsisracing", url: "https://instagram.com/Ekleipsisracing", icon: "IG" },
   { platform: "LinkedIn", handle: "Team Ekleipsis", url: "https://linkedin.com/company/team-ekleipsis", icon: "in" },
-  { platform: "X", handle: "@Ekleipsis", url: "https://x.com/Ekleipsis", icon: "X" }
+  { platform: "X", handle: "@TeamEkleipsis", url: "https://x.com/TeamEkleipsis", icon: "X" }
 ];
 
 // Skill bar component
