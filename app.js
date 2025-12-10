@@ -26,6 +26,7 @@ const PRESETS = {
 function App() {
   const canvasRef = useRef(null);
   const pinOverlayRef = useRef(null);
+  const glowRef = useRef(null);
 
   const [hud, setHud] = useState({ visible: false, title: "", specs: [], desc: "", x: 0, y: 0 });
   const [preset, setPreset] = useState("normal");
@@ -59,6 +60,17 @@ function App() {
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
   }, [theme]);
+
+  // Mouse Glow Effect
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+        if (glowRef.current) {
+            glowRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useEffect(() => {
     applyPreset("normal");
@@ -99,6 +111,7 @@ function App() {
     F,
     null,
     showIntro ? h(LoadingIntro) : null,
+    h("div", { className: "mouse-glow", ref: glowRef }),
     h("canvas", { id: "canvas", ref: canvasRef }),
     h("div", { id: "pin-overlay", ref: pinOverlayRef }),
     h(Navbar, { theme, toggleTheme }),

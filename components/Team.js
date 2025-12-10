@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import DecodedText from "./DecodedText.js";
+
 const h = React.createElement;
 
 // Team member data from the portfolio
@@ -181,7 +183,9 @@ function ExpandedProfile({ member, onClose }) {
           ),
           h("div", { className: "profile-hero-info" },
             h("span", { className: "profile-member-number" }, `#0${member.id}`),
-            h("h2", { className: "profile-name" }, member.name),
+            h("h2", { className: "profile-name" }, 
+              h(DecodedText, { text: member.name, revealSpeed: 40 })
+            ),
             h("span", { className: "profile-role" }, member.role),
             h("span", { className: "profile-tagline" }, member.tagline)
           )
@@ -258,12 +262,44 @@ function ExpandedProfile({ member, onClose }) {
   );
 }
 
-// Individual card component
+// Individual card component with 3D Tilt
 function TeamCard({ member, index, isFlipped, onFlip, onExpand }) {
+  const cardRef = useRef(null);
+  
   const cardStyle = {
     "--card-accent": member.color,
     "--card-gradient": member.gradient,
     "--card-index": index
+  };
+
+  // 3D Tilt Logic
+  const handleMouseMove = (e) => {
+    if (isFlipped || !cardRef.current) return;
+    
+    const card = cardRef.current;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg rotation
+    const rotateY = ((x - centerX) / centerX) * 10;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    card.querySelector('.card-front-content').style.transform = `translateZ(30px)`;
+    card.querySelector('.card-glow').style.background = `radial-gradient(circle at ${x}px ${y}px, ${member.color}40, transparent 80%)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (isFlipped || !cardRef.current) return;
+    const card = cardRef.current;
+    
+    card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+    card.querySelector('.card-front-content').style.transform = `translateZ(0px)`;
+    card.classList.add('resetting');
+    setTimeout(() => card.classList.remove('resetting'), 500);
   };
 
   // Handle card click
@@ -278,33 +314,38 @@ function TeamCard({ member, index, isFlipped, onFlip, onExpand }) {
 
   // Regular card view
   return h("div", {
-    className: `team-card ${isFlipped ? "flipped" : ""}`,
+    className: `team-card tilt-card-container ${isFlipped ? "flipped" : ""}`,
     style: cardStyle,
-    onClick: handleClick
+    onClick: handleClick,
+    onMouseMove: handleMouseMove,
+    onMouseLeave: handleMouseLeave
   },
-    // Front of card
-    h("div", { className: "team-card-front" },
-      h("div", { className: "card-glow", style: { background: `radial-gradient(circle at 30% 30%, ${member.color}30, transparent 60%)` } }),
-      h("div", { className: "card-front-content" },
-        h("span", { className: "card-number" }, `#0${member.id}`),
-        h("div", { className: "card-logo-wrap" },
-          h("img", { src: "logo.png", alt: "Team Ekleipsis" })
-        ),
-        h("span", { className: "card-hint" }, "TAP TO REVEAL")
-      )
-    ),
-    // Back of card
-    h("div", { className: "team-card-back" },
-      h("div", { className: "card-back-content" },
-        h("div", { className: "member-photo-placeholder", style: { borderColor: member.color } },
-          h("div", { className: "member-avatar-circle", style: { background: member.gradient } },
-            member.initials
-          )
-        ),
-        h("h3", { className: "member-name" }, member.name),
-        h("span", { className: "member-role-tag", style: { borderColor: member.color, color: member.color } }, member.role),
-        h("p", { className: "member-short-bio" }, member.shortBio),
-        h("span", { className: "card-expand-hint" }, "TAP FOR FULL PROFILE \u2192")
+    // Inner wrapper for tilt
+    h("div", { className: "tilt-card-inner", ref: cardRef },
+      // Front of card
+      h("div", { className: "team-card-front" },
+        h("div", { className: "card-glow", style: { background: `radial-gradient(circle at 50% 50%, ${member.color}30, transparent 60%)` } }),
+        h("div", { className: "card-front-content", style: { transition: "transform 0.1s" } },
+          h("span", { className: "card-number" }, `#0${member.id}`),
+          h("div", { className: "card-logo-wrap" },
+            h("img", { src: "logo.png", alt: "Team Ekleipsis" })
+          ),
+          h("span", { className: "card-hint" }, "TAP TO REVEAL")
+        )
+      ),
+      // Back of card
+      h("div", { className: "team-card-back" },
+        h("div", { className: "card-back-content" },
+          h("div", { className: "member-photo-placeholder", style: { borderColor: member.color } },
+            h("div", { className: "member-avatar-circle", style: { background: member.gradient } },
+              member.initials
+            )
+          ),
+          h("h3", { className: "member-name" }, member.name),
+          h("span", { className: "member-role-tag", style: { borderColor: member.color, color: member.color } }, member.role),
+          h("p", { className: "member-short-bio" }, member.shortBio),
+          h("span", { className: "card-expand-hint" }, "TAP FOR FULL PROFILE \u2192")
+        )
       )
     )
   );

@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from "react";
+import DecodedText from "./DecodedText.js";
+
 const h = React.createElement;
 
 export default function Hero() {
@@ -28,7 +30,9 @@ export default function Hero() {
             "h1",
             { className: "hero-title" },
             h("span", { className: "line1" }, "TEAM"),
-            h("span", { className: "line2 glitch", "data-text": "EKLEIPSIS" }, "EKLEIPSIS")
+            h("span", { className: "line2" }, 
+                h(DecodedText, { text: "EKLEIPSIS", revealSpeed: 80, scrambleSpeed: 40 })
+            )
         ),
         h("p", { className: "hero-subtitle" }, "Professional Class | EK3 Reveal"),
         h(
