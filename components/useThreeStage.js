@@ -4,22 +4,32 @@ import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 // Hotspot data - screen offsets stored in window for debug adjustment
 const HOTSPOTS = [
-  { id: "nose", label: "Nose Cone", specs: ["Carbon fiber composite", "CFD optimized"], desc: "Aerodynamic nose cone designed for minimum drag." },
-  { id: "front-wing", label: "Front Wing", specs: ["Multi-element", "Adjustable"], desc: "Generates front downforce for cornering grip." },
-  { id: "sidepod", label: "Sidepod", specs: ["Cooling ducts", "Undercut design"], desc: "Houses radiators and manages airflow." },
-  { id: "intake", label: "Air Intake", specs: ["Ram air effect", "Filter system"], desc: "Feeds clean air to the engine." },
-  { id: "rear-wing", label: "Rear Wing", specs: ["DRS capable", "High downforce"], desc: "Primary downforce generator." },
-  { id: "diffuser", label: "Diffuser", specs: ["Ground effect", "7 channels"], desc: "Accelerates underbody airflow." },
+  { id: "halo", label: "Halo", specs: ["3D Printed PLA", "Mandatory Safety Structure"], desc: "Protective arch mandated by 2025 Technical Regulations." },
+  { id: "nose-cone", label: "Nose Cone", specs: ["Separate Assembly", "Streamlined Geometry"], desc: "Redesigned front assembly with reduced frontal area." },
+  { id: "front-wing", label: "Front Wing", specs: ["70mm Full-Width Span", "Integrated Endplates"], desc: "Controllable surfaces conditioning boundary layer flow." },
+  { id: "rear-wing", label: "Rear Wing", specs: ["Single Unbroken Span", "Behind Ref. Plane B"], desc: "Primary downforce generator with optimized profile." },
+  { id: "wheels", label: "Wheel System", specs: ["PEEK Ceramic ZrO2 Bearings", "Carbon Fibre Axle Rods"], desc: "Spoke/turbine design with F1 Bearings precision ceramics." },
+  { id: "body", label: "Main Body", specs: ["CNC Machined", "~50g Total Mass"], desc: "Machined from Denford polyurethane block. Integrated CO2 chamber." },
 ];
 
-// Default pin offsets from car center (in pixels) - editable via debug panel
+const HOTSPOT_PART_MAP = {
+  "halo": ["halo"],
+  "nose-cone": ["nose_cone"],
+  "front-wing": ["front_wing"],
+  "rear-wing": ["rear_wing"],
+  "wheels": ["wheel_FL", "wheel_FR", "wheel_RL", "wheel_RR"],
+  "body": ["main_body"],
+};
+
+const BLUEPRINT_LABEL_IDS = ["rear-wing", "halo", "nose-cone", "front-wing"];
+
 window.pinOffsets = window.pinOffsets || {
-  "nose": { x: 180, y: -20 },
-  "front-wing": { x: 200, y: 40 },
-  "sidepod": { x: 50, y: 30 },
-  "intake": { x: -20, y: -60 },
-  "rear-wing": { x: -150, y: -50 },
-  "diffuser": { x: -180, y: 50 }
+  "halo": { x: 0, y: 0 },
+  "nose-cone": { x: 0, y: 0 },
+  "front-wing": { x: 0, y: 0 },
+  "rear-wing": { x: 0, y: 0 },
+  "wheels": { x: 0, y: 0 },
+  "body": { x: 0, y: 0 },
 };
 
 // Global offset to shift entire scene left (make room for UI panels on right)
@@ -28,37 +38,37 @@ const SCENE_X_OFFSET = -3;
 // Phase-specific car configurations (user-tuned values)
 const PHASE_CONFIGS = {
   hero: {
-    carOffset: { x: -8.6, y: 0.2, z: 16 },
-    carScale: 2.65,
-    carPos: { x: 1.1, y: 1.2, z: 30 },
+    carOffset: { x: 0.8, y: 0.9, z: 4.2 },
+    carScale: 1.43,
+    carPos: { x: 14.9, y: 0.9, z: 4 },
     showPodium: false,
-    cameraPos: { x: 0, y: 3, z: 15 },
-    carRotation: -Math.PI / 4,
+    cameraPos: { x: 2.0, y: 2.8, z: 26.5 },
+    carRotation: -1.361357,
+  },
+  integration: {
+    carOffset: { x: 1.6, y: 0.94, z: 6.2 },
+    carScale: 1.15,
+    carPos: { x: 0.4, y: -0.22, z: -1.0 },
+    showPodium: false,
+    cameraPos: { x: -0.4, y: 2.9, z: 24.0 },
+    carRotation: Math.PI * 2 / 3,
   },
   engineering: {
-    carOffset: { x: 4.7, y: 1.4, z: 10 },
-    carScale: 1.95,
-    carPos: { x: -4.6, y: 0.9, z: -3.4 },
+    carOffset: { x: 0.6, y: 0.88, z: 4.0 },
+    carScale: 0.78,
+    carPos: { x: 5.6, y: -0.12, z: -1.2 },
     showPodium: true,
-    cameraPos: { x: 10, y: 2, z: 13 },
+    cameraPos: { x: 1.1, y: 2.9, z: 27.5 },
     carRotation: -Math.PI / 4,
-  },
-  garage: {
-    carOffset: { x: 5.6, y: 0.6, z: 10 },
-    carScale: 1.75,
-    carPos: { x: -5.5, y: 1.4, z: -3.8 },
-    showPodium: true,
-    cameraPos: { x: 10, y: 2, z: 14 },
-    carRotation: -Math.PI / 5,
   },
   aero: {
     // Car stays in original position - wind machine moved to right side
-    carOffset: { x: 0, y: 1.2, z: 10 },
-    carScale: 2.2,
-    carPos: { x: -3, y: -0.5, z: -2 },
+    carOffset: { x: 0.8, y: 0.9, z: 6.4 },
+    carScale: 1.2,
+    carPos: { x: 2.8, y: -0.42, z: -1.6 },
     showPodium: false,
-    cameraPos: { x: 0, y: 3, z: 20 },
-    carRotation: -Math.PI / 2, // Original rotation - car nose points right
+    cameraPos: { x: 0, y: 3.8, z: 19.0 },
+    carRotation: -Math.PI / 2 + 0.08,
   },
   sponsors: {
     // Car completely hidden
@@ -80,29 +90,155 @@ const PHASE_CONFIGS = {
     carRotation: 0,
     hideCar: true,
   },
+  achievements: {
+    carOffset: { x: 0, y: -100, z: 0 },
+    carScale: 0,
+    carPos: { x: 0, y: -100, z: 0 },
+    showPodium: false,
+    cameraPos: { x: 0, y: 5, z: 20 },
+    carRotation: 0,
+    hideCar: true,
+  },
 };
+
+const ASSEMBLY_STAGGER_NORMALIZED = 0.42;
+const ASSEMBLY_MIN_OPACITY = 0.06;
+const EASE_OUT_BACK_C1 = 1.70158;
+const AUTO_ASSEMBLY_STEP_SECONDS = 1.0;
+const ROTATION_ENABLED_PHASES = new Set(["hero", "integration", "engineering"]);
+
+const PART_COLOR_MAP = {
+  main_body: 0x1a2130,
+  nose_cone: 0xba6a2d,
+  front_wing: 0x161922,
+  rear_wing: 0x141821,
+  halo: 0x252d3f,
+  front_suspension: 0x1f2533,
+  rear_suspension: 0x1f2533,
+  wheel_FL: 0x101114,
+  wheel_FR: 0x101114,
+  wheel_RL: 0x101114,
+  wheel_RR: 0x101114,
+};
+
+const HERO_LOOK_BIAS_DEFAULT = -4.4;
+const HERO_PLACEMENT_DEFAULT = {
+  carPosX: PHASE_CONFIGS.hero.carPos.x,
+  carPosY: PHASE_CONFIGS.hero.carPos.y,
+  carPosZ: PHASE_CONFIGS.hero.carPos.z,
+  carScale: PHASE_CONFIGS.hero.carScale,
+  carRotation: PHASE_CONFIGS.hero.carRotation,
+  lookBiasX: HERO_LOOK_BIAS_DEFAULT,
+};
+
+function clamp01(v) {
+  return Math.max(0, Math.min(1, v));
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function easeOutBack(t) {
+  const c3 = EASE_OUT_BACK_C1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + EASE_OUT_BACK_C1 * Math.pow(t - 1, 2);
+}
+
+function clonePhaseConfig(baseConfig) {
+  return {
+    ...baseConfig,
+    carOffset: { ...baseConfig.carOffset },
+    carPos: { ...baseConfig.carPos },
+    cameraPos: { ...baseConfig.cameraPos },
+  };
+}
+
+function getPartIdFromFile(file) {
+  const match = /([^/\\]+)\.stl$/i.exec(file || "");
+  return match ? match[1] : "";
+}
+
+function getPartColor(partId) {
+  return PART_COLOR_MAP[partId] || 0x20242d;
+}
+
+function isPartMatch(partId, targetId) {
+  if (!targetId) return false;
+  if (partId === targetId) return true;
+  if (targetId === "wheel_system") return /^wheel_/i.test(partId);
+  return false;
+}
+
+function computeHotspotAnchors(parts) {
+  const partCenters = {};
+  const fallbackCenter = new THREE.Vector3(0, 0, 0);
+  let fallbackCount = 0;
+
+  parts.forEach((part) => {
+    const partId = getPartIdFromFile(part.file);
+    if (!partId || !part.geometry) return;
+
+    part.geometry.computeBoundingBox();
+    if (!part.geometry.boundingBox) return;
+
+    const center = part.geometry.boundingBox.getCenter(new THREE.Vector3());
+    partCenters[partId] = center;
+    fallbackCenter.add(center);
+    fallbackCount++;
+  });
+
+  if (fallbackCount > 0) fallbackCenter.multiplyScalar(1 / fallbackCount);
+
+  const anchors = {};
+  HOTSPOTS.forEach((hotspot) => {
+    const mappedParts = HOTSPOT_PART_MAP[hotspot.id] || [];
+    const collected = mappedParts
+      .map((partId) => partCenters[partId])
+      .filter(Boolean);
+
+    if (collected.length > 0) {
+      const anchor = new THREE.Vector3();
+      collected.forEach((vec) => anchor.add(vec));
+      anchor.multiplyScalar(1 / collected.length);
+      anchors[hotspot.id] = anchor;
+      return;
+    }
+
+    anchors[hotspot.id] = fallbackCenter.clone();
+  });
+
+  return anchors;
+}
+
+function getPhaseConfigForViewport(phaseName, baseConfig) {
+  const config = clonePhaseConfig(baseConfig);
+  if (phaseName !== "hero") return config;
+  return config;
+}
 
 export default function useThreeStage({
   canvasRef, pinOverlayRef, setHud, phase, theme,
-  carColor, carPos, carOffset, carScale,
-  bodyColor, accentColor, wheelColor, viewMode, showBox,
-  aeroRotation, aeroPreset
+  viewMode, isolatedPart, setIsolatedPart
 }) {
   const phaseRef = useRef(phase);
   const themeRef = useRef(theme);
   const viewModeRef = useRef(viewMode || "render");
+  const dragOrbitRef = useRef({
+    active: false,
+    pointerId: null,
+    lastX: 0,
+    lastY: 0,
+    yaw: 0,
+    pitch: 0,
+    targetYaw: 0,
+    targetPitch: 0,
+  });
+  const zoomRef = useRef({ value: 0, target: 0 });
 
-  // Car colors
-  const bodyColorRef = useRef(bodyColor || "#555555");
-  const accentColorRef = useRef(accentColor || "#222222");
-  const wheelColorRef = useRef(wheelColor || "#111111");
-
-  // Position refs
-  const carPosRef = useRef(carPos);
-  const carOffsetRef = useRef(carOffset);
-  const carScaleRef = useRef(carScale);
-  const aeroRotationRef = useRef(aeroRotation || 0);
-  const aeroPresetRef = useRef(aeroPreset || "normal");
+  const aeroRotationRef = useRef(0);
+  const aeroPresetRef = useRef("normal");
+  const heroPlacementRef = useRef({ ...HERO_PLACEMENT_DEFAULT });
+  const heroPlacementLockedRef = useRef(false);
 
   // Scene object refs
   const sceneObjectsRef = useRef({});
@@ -113,44 +249,6 @@ export default function useThreeStage({
   useEffect(() => { phaseRef.current = phase; }, [phase]);
   useEffect(() => { themeRef.current = theme; }, [theme]);
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
-  useEffect(() => { carPosRef.current = carPos; }, [carPos]);
-  useEffect(() => { carOffsetRef.current = carOffset; }, [carOffset]);
-  useEffect(() => { carScaleRef.current = carScale; }, [carScale]);
-  useEffect(() => { aeroRotationRef.current = aeroRotation || 0; }, [aeroRotation]);
-  useEffect(() => { aeroPresetRef.current = aeroPreset || "normal"; }, [aeroPreset]);
-
-  useEffect(() => {
-    bodyColorRef.current = bodyColor;
-    if (sceneObjectsRef.current.bodyMaterial) {
-      sceneObjectsRef.current.bodyMaterial.color.set(bodyColor);
-    }
-  }, [bodyColor]);
-
-  useEffect(() => {
-    accentColorRef.current = accentColor;
-    if (sceneObjectsRef.current.accentMaterial) {
-      sceneObjectsRef.current.accentMaterial.color.set(accentColor);
-    }
-  }, [accentColor]);
-
-  useEffect(() => {
-    wheelColorRef.current = wheelColor;
-    // Wheel color kept for future use when separate wheel parts are available
-  }, [wheelColor]);
-
-  // Show/hide container helper box
-  useEffect(() => {
-    if (sceneObjectsRef.current.containerHelper) {
-      sceneObjectsRef.current.containerHelper.visible = showBox;
-    }
-  }, [showBox]);
-
-  // Legacy carColor support
-  useEffect(() => {
-    if (carColor && sceneObjectsRef.current.bodyMaterial) {
-      sceneObjectsRef.current.bodyMaterial.color.set(carColor);
-    }
-  }, [carColor]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -231,6 +329,174 @@ export default function useThreeStage({
     };
     window.addEventListener('mousemove', updateSpotlight);
 
+    function getOrCreateAssemblyState() {
+      if (!sceneObjectsRef.current.assemblyState) {
+        sceneObjectsRef.current.assemblyState = {
+          active: false,
+          mode: "build",
+          selectedPart: "main_body",
+          placedParts: new Set(),
+          autoRunning: false,
+          autoStartTime: 0,
+          autoCompleted: false,
+        };
+      }
+      return sceneObjectsRef.current.assemblyState;
+    }
+
+    const onIntegrationModeChange = (evt) => {
+      const mode = evt.detail?.mode === "auto" ? "auto" : "build";
+      const state = getOrCreateAssemblyState();
+      state.mode = mode;
+      state.selectedPart = mode === "build" ? (state.selectedPart || "main_body") : null;
+      state.autoRunning = false;
+      state.autoCompleted = false;
+      state.placedParts = new Set();
+    };
+
+    const onIntegrationReset = () => {
+      const state = getOrCreateAssemblyState();
+      state.autoRunning = false;
+      state.autoCompleted = false;
+      state.placedParts = new Set();
+    };
+
+    const onIntegrationSelectPart = (evt) => {
+      const state = getOrCreateAssemblyState();
+      state.selectedPart = evt.detail?.partId || null;
+    };
+
+    const onIntegrationPlacePart = (evt) => {
+      const partId = evt.detail?.partId;
+      if (!partId) return;
+      const state = getOrCreateAssemblyState();
+      state.mode = "build";
+      state.autoRunning = false;
+      if (partId === "wheel_system") {
+        state.placedParts.add("wheel_FL");
+        state.placedParts.add("wheel_FR");
+        state.placedParts.add("wheel_RL");
+        state.placedParts.add("wheel_RR");
+        return;
+      }
+      state.placedParts.add(partId);
+    };
+
+    const onIntegrationStartAuto = () => {
+      const state = getOrCreateAssemblyState();
+      state.mode = "auto";
+      state.autoRunning = true;
+      state.autoCompleted = false;
+      state.autoStartTime = clock.getElapsedTime();
+      state.placedParts = new Set();
+      state.selectedPart = null;
+    };
+
+    const sendHeroPlacementSync = () => {
+      const tune = heroPlacementRef.current || HERO_PLACEMENT_DEFAULT;
+      window.dispatchEvent(
+        new CustomEvent("hero-placement-sync", {
+          detail: {
+            carPosX: tune.carPosX,
+            carPosY: tune.carPosY,
+            carPosZ: tune.carPosZ,
+            carScale: tune.carScale,
+            carRotation: tune.carRotation,
+            carRotationDeg: (tune.carRotation * 180) / Math.PI,
+            lookBiasX: tune.lookBiasX,
+            locked: !!heroPlacementLockedRef.current,
+          },
+        })
+      );
+    };
+
+    const onHeroPlacementSet = (evt) => {
+      const detail = evt.detail || {};
+      const currentTune = heroPlacementRef.current || HERO_PLACEMENT_DEFAULT;
+      const nextTune = { ...currentTune };
+
+      if (Number.isFinite(detail.carPosX)) nextTune.carPosX = detail.carPosX;
+      if (Number.isFinite(detail.carPosY)) nextTune.carPosY = detail.carPosY;
+      if (Number.isFinite(detail.carPosZ)) nextTune.carPosZ = detail.carPosZ;
+      if (Number.isFinite(detail.carScale)) nextTune.carScale = detail.carScale;
+      if (Number.isFinite(detail.lookBiasX)) nextTune.lookBiasX = detail.lookBiasX;
+      if (Number.isFinite(detail.carRotation)) {
+        nextTune.carRotation = detail.carRotation;
+      } else if (Number.isFinite(detail.carRotationDeg)) {
+        nextTune.carRotation = (detail.carRotationDeg * Math.PI) / 180;
+      }
+
+      heroPlacementRef.current = nextTune;
+    };
+
+    const onHeroPlacementLock = (evt) => {
+      heroPlacementLockedRef.current = !!evt.detail?.locked;
+      sendHeroPlacementSync();
+    };
+
+    const onHeroPlacementReset = () => {
+      heroPlacementRef.current = { ...HERO_PLACEMENT_DEFAULT };
+      heroPlacementLockedRef.current = false;
+      sendHeroPlacementSync();
+    };
+
+    window.addEventListener("integration-mode-change", onIntegrationModeChange);
+    window.addEventListener("integration-reset", onIntegrationReset);
+    window.addEventListener("integration-select-part", onIntegrationSelectPart);
+    window.addEventListener("integration-place-part", onIntegrationPlacePart);
+    window.addEventListener("integration-start-auto", onIntegrationStartAuto);
+    window.addEventListener("hero-placement-set", onHeroPlacementSet);
+    window.addEventListener("hero-placement-lock", onHeroPlacementLock);
+    window.addEventListener("hero-placement-reset", onHeroPlacementReset);
+    sendHeroPlacementSync();
+
+    const shouldAllowOrbit = () => ROTATION_ENABLED_PHASES.has(phaseRef.current);
+
+    const onPointerDown = (evt) => {
+      if (!shouldAllowOrbit()) return;
+      dragOrbitRef.current.active = true;
+      dragOrbitRef.current.pointerId = evt.pointerId;
+      dragOrbitRef.current.lastX = evt.clientX;
+      dragOrbitRef.current.lastY = evt.clientY;
+      canvas.style.cursor = "grabbing";
+      if (canvas.setPointerCapture) canvas.setPointerCapture(evt.pointerId);
+    };
+
+    const onPointerMove = (evt) => {
+      const drag = dragOrbitRef.current;
+      if (!drag.active) return;
+      const dx = evt.clientX - drag.lastX;
+      const dy = evt.clientY - drag.lastY;
+      drag.lastX = evt.clientX;
+      drag.lastY = evt.clientY;
+      drag.targetYaw += dx * 0.006;
+      drag.targetPitch = THREE.MathUtils.clamp(drag.targetPitch + dy * 0.0038, -0.45, 0.45);
+    };
+
+    const onPointerUp = (evt) => {
+      if (!dragOrbitRef.current.active) return;
+      dragOrbitRef.current.active = false;
+      if (canvas.releasePointerCapture && dragOrbitRef.current.pointerId != null) {
+        try { canvas.releasePointerCapture(dragOrbitRef.current.pointerId); } catch (err) { /* noop */ }
+      }
+      dragOrbitRef.current.pointerId = null;
+      canvas.style.cursor = shouldAllowOrbit() ? "grab" : "default";
+    };
+
+    const onWheel = (evt) => {
+      if (phaseRef.current !== "engineering") return;
+      evt.preventDefault();
+      const next = zoomRef.current.target + evt.deltaY * 0.01;
+      zoomRef.current.target = THREE.MathUtils.clamp(next, -5.5, 8.5);
+    };
+
+    canvas.style.cursor = shouldAllowOrbit() ? "grab" : "default";
+    canvas.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+    canvas.addEventListener("wheel", onWheel, { passive: false });
+
 
     // ========== GROUND / FLOOR ==========
     const groundMaterial = new THREE.MeshStandardMaterial({
@@ -293,20 +559,24 @@ export default function useThreeStage({
 
     // ========== MATERIALS ==========
     const bodyMaterial = new THREE.MeshPhysicalMaterial({
-      color: bodyColorRef.current || 0x555555,
-      metalness: 0.8,
-      roughness: 0.2,
+      color: 0xffffff,
+      vertexColors: true,
+      metalness: 0.78,
+      roughness: 0.22,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
-      reflectivity: 0.9,
+      clearcoatRoughness: 0.12,
+      reflectivity: 0.85,
+      envMapIntensity: 1.1,
     });
     sceneObjectsRef.current.bodyMaterial = bodyMaterial;
 
     const accentMaterial = new THREE.MeshPhysicalMaterial({
-      color: accentColorRef.current || 0x222222,
-      metalness: 0.9,
-      roughness: 0.15,
-      clearcoat: 0.8,
+      color: 0x13161c,
+      metalness: 0.92,
+      roughness: 0.18,
+      clearcoat: 0.84,
+      emissive: 0x000000,
+      emissiveIntensity: 0,
     });
     sceneObjectsRef.current.accentMaterial = accentMaterial;
 
@@ -323,95 +593,256 @@ export default function useThreeStage({
       opacity: 0
     });
 
-    // ========== LOAD CAR MODEL ==========
+    // ========== LOAD CAR MODEL (Multi-part EK5) ==========
     let carMesh = null;
     let wireframe = null;
     let vertexPoints = null;
     const pins = [];
 
+    const PART_FILES = [
+      '3D Assets/EK5_parts/main_body.stl',
+      '3D Assets/EK5_parts/nose_cone.stl',
+      '3D Assets/EK5_parts/front_wing.stl',
+      '3D Assets/EK5_parts/rear_wing.stl',
+      '3D Assets/EK5_parts/halo.stl',
+      '3D Assets/EK5_parts/wheel_FL.stl',
+      '3D Assets/EK5_parts/wheel_FR.stl',
+      '3D Assets/EK5_parts/wheel_RL.stl',
+      '3D Assets/EK5_parts/wheel_RR.stl',
+      '3D Assets/EK5_parts/front_suspension.stl',
+      '3D Assets/EK5_parts/rear_suspension.stl',
+    ];
+
     const loader = new STLLoader();
-    loader.load(
-      "EK3 COMBINED.stl",
-      (geometry) => {
-        geometry.center();
-        geometry.computeVertexNormals();
+    const loadedParts = new Array(PART_FILES.length);
+    let partsLoaded = 0;
 
-        carMesh = new THREE.Mesh(geometry, bodyMaterial);
-        carMesh.castShadow = true;
-        carMesh.receiveShadow = true;
+    PART_FILES.forEach((file, index) => {
+      loader.load(file, (geometry) => {
+        loadedParts[index] = { file, geometry };
+        partsLoaded++;
+        console.log(`Loaded ${partsLoaded}/${PART_FILES.length}: ${file}`);
 
-        // Scale to fill 90% of podium (podium radius is ~8, so car should span ~14-15 units)
-        const box = new THREE.Box3().setFromObject(carMesh);
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 14 / maxDim;  // Much bigger - fills podium
-        carMesh.scale.setScalar(scale);
-        carMesh.userData.baseScale = scale;
-        carMesh.rotation.y = -Math.PI / 2;
-        carMesh.position.y = 0;
+        if (partsLoaded === PART_FILES.length) {
+          const centeredParts = centerPartGeometries(loadedParts);
+          sceneObjectsRef.current.hotspotAnchors = computeHotspotAnchors(centeredParts);
 
-        carGroup.add(carMesh);
-        sceneObjectsRef.current.carMesh = carMesh;
+          // Merge all parts for stable engineering/wireframe modes.
+          const mergedGeometry = mergeGeometries(centeredParts);
+          mergedGeometry.computeVertexNormals();
 
-        // Wireframe for engineering view
-        const edgesGeometry = new THREE.EdgesGeometry(geometry, 15);
-        wireframe = new THREE.LineSegments(edgesGeometry, wireMaterial);
-        wireframe.scale.copy(carMesh.scale);
-        wireframe.rotation.copy(carMesh.rotation);
-        wireframe.position.copy(carMesh.position);
-        carGroup.add(wireframe);
-        sceneObjectsRef.current.wireframe = wireframe;
+          carMesh = new THREE.Mesh(mergedGeometry, bodyMaterial);
+          carMesh.castShadow = true;
+          carMesh.receiveShadow = true;
 
-        // Vertex points for engineering view
-        vertexPoints = new THREE.Points(geometry, pointMaterial);
-        vertexPoints.scale.copy(carMesh.scale);
-        vertexPoints.rotation.copy(carMesh.rotation);
-        vertexPoints.position.copy(carMesh.position);
-        carGroup.add(vertexPoints);
-        sceneObjectsRef.current.vertexPoints = vertexPoints;
+          // Scale to fill podium (same as old code)
+          const box = new THREE.Box3().setFromObject(carMesh);
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 14 / maxDim;
+          carMesh.scale.setScalar(scale);
+          carMesh.userData.baseScale = scale;
+          // EK5 STL: Z = front-to-back, Y = up. Rotate to face left for wind tunnel.
+          carMesh.rotation.y = -Math.PI / 2;
+          carMesh.position.y = 0;
 
-        // Setup hotspot pins
-        if (pinOverlayRef.current && !pinsAdded.current) {
-          pinOverlayRef.current.innerHTML = "";
-          HOTSPOTS.forEach((h) => {
-            const el = document.createElement("div");
-            el.className = "hotspot-pin";
-            el.setAttribute("data-label", h.label);
-            el.addEventListener("click", (evt) => {
-              evt.stopPropagation();
-              setHud({
-                visible: true,
-                title: h.label,
-                specs: h.specs,
-                desc: h.desc,
-                x: evt.clientX,
-                y: evt.clientY,
+          carGroup.add(carMesh);
+          sceneObjectsRef.current.carMesh = carMesh;
+
+          const assemblyGroup = new THREE.Group();
+          assemblyGroup.visible = false;
+          carGroup.add(assemblyGroup);
+          sceneObjectsRef.current.assemblyGroup = assemblyGroup;
+
+          sceneObjectsRef.current.assemblyMeshes = buildAssemblyMeshes(
+            centeredParts,
+            carMesh,
+            assemblyGroup,
+            bodyMaterial,
+            accentMaterial
+          );
+          sceneObjectsRef.current.assemblyState = {
+            active: false,
+            mode: "build",
+            selectedPart: "main_body",
+            placedParts: new Set(),
+            autoRunning: false,
+            autoStartTime: 0,
+            autoCompleted: false,
+          };
+
+          // Wireframe for engineering view
+          const edgesGeometry = new THREE.EdgesGeometry(mergedGeometry, 15);
+          wireframe = new THREE.LineSegments(edgesGeometry, wireMaterial);
+          wireframe.scale.copy(carMesh.scale);
+          wireframe.rotation.copy(carMesh.rotation);
+          wireframe.position.copy(carMesh.position);
+          carGroup.add(wireframe);
+          sceneObjectsRef.current.wireframe = wireframe;
+
+          // Vertex points for engineering view
+          vertexPoints = new THREE.Points(mergedGeometry, pointMaterial);
+          vertexPoints.scale.copy(carMesh.scale);
+          vertexPoints.rotation.copy(carMesh.rotation);
+          vertexPoints.position.copy(carMesh.position);
+          carGroup.add(vertexPoints);
+          sceneObjectsRef.current.vertexPoints = vertexPoints;
+
+          // Setup hotspot pins (same as old code)
+          if (pinOverlayRef.current && !pinsAdded.current) {
+            pinOverlayRef.current.innerHTML = "";
+            HOTSPOTS.forEach((h) => {
+              const el = document.createElement("div");
+              el.className = "hotspot-pin";
+              el.setAttribute("data-label", h.label);
+              el.setAttribute("data-hotspot-id", h.id);
+              el.addEventListener("click", (evt) => {
+                evt.stopPropagation();
+                setHud({
+                  visible: true,
+                  title: h.label,
+                  specs: h.specs,
+                  desc: h.desc,
+                  x: evt.clientX,
+                  y: evt.clientY,
+                });
               });
+              pinOverlayRef.current.appendChild(el);
+              pins.push({ ...h, el });
             });
-            pinOverlayRef.current.appendChild(el);
-            pins.push({ ...h, el });
-          });
-          pinsAdded.current = true;
-          // Setup drag after a short delay to ensure functions are defined
-          setTimeout(() => {
-            if (typeof setupPinDragging === "function") setupPinDragging();
-          }, 100);
+            pinsAdded.current = true;
+            setTimeout(() => {
+              if (typeof setupPinDragging === "function") setupPinDragging();
+            }, 100);
+          }
         }
-      },
-      (progress) => {
-        console.log("Loading:", (progress.loaded / progress.total * 100).toFixed(1) + "%");
-      },
-      (error) => {
-        console.error("STL load error:", error);
-        // Fallback box
-        const fallback = new THREE.Mesh(
-          new THREE.BoxGeometry(6, 1.5, 3),
-          bodyMaterial
+      });
+    });
+
+    function centerPartGeometries(parts) {
+      const sourceParts = parts.filter(Boolean);
+      const worldBox = new THREE.Box3();
+
+      sourceParts.forEach(({ geometry }) => {
+        geometry.computeBoundingBox();
+        if (geometry.boundingBox) worldBox.union(geometry.boundingBox);
+      });
+
+      const center = worldBox.getCenter(new THREE.Vector3());
+      return sourceParts.map((part) => {
+        const geometry = part.geometry.clone();
+        geometry.translate(-center.x, -center.y, -center.z);
+        geometry.computeVertexNormals();
+        return { file: part.file, geometry };
+      });
+    }
+
+    // Helper: merge multiple BufferGeometry into one with per-part vertex colors.
+    function mergeGeometries(parts) {
+      let totalVertices = 0;
+      parts.forEach((part) => { totalVertices += part.geometry.attributes.position.count; });
+
+      const positions = new Float32Array(totalVertices * 3);
+      const normals = new Float32Array(totalVertices * 3);
+      const colors = new Float32Array(totalVertices * 3);
+      let offset = 0;
+
+      parts.forEach((part) => {
+        const g = part.geometry;
+        const pos = g.attributes.position.array;
+        const norm = g.attributes.normal ? g.attributes.normal.array : null;
+        const partId = getPartIdFromFile(part.file);
+        const color = new THREE.Color(getPartColor(partId));
+        positions.set(pos, offset * 3);
+        if (norm) normals.set(norm, offset * 3);
+        const count = g.attributes.position.count;
+        for (let i = 0; i < count; i++) {
+          const base = (offset + i) * 3;
+          colors[base] = color.r;
+          colors[base + 1] = color.g;
+          colors[base + 2] = color.b;
+        }
+        offset += g.attributes.position.count;
+      });
+
+      const merged = new THREE.BufferGeometry();
+      merged.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      merged.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+      merged.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      return merged;
+    }
+
+    function seededUnit(seed) {
+      const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
+      return x - Math.floor(x);
+    }
+
+    function createPartMaterial(file, bodyMat, accentMat) {
+      const partId = getPartIdFromFile(file);
+      const darkPart = /wheel|suspension|wing|halo/i.test(partId);
+      const source = darkPart ? accentMat : bodyMat;
+      const material = source.clone();
+      material.vertexColors = false;
+      const baseColorHex = getPartColor(partId);
+      material.color.setHex(baseColorHex);
+      material.transparent = true;
+      material.opacity = 0;
+      material.emissive = new THREE.Color(0x000000);
+      material.emissiveIntensity = 0;
+      material.userData = { ...(material.userData || {}), baseColorHex };
+      return material;
+    }
+
+    function buildAssemblyMeshes(parts, targetMesh, group, bodyMat, accentMat) {
+      const assemblyMeshes = [];
+
+      parts.forEach((part, i) => {
+        const partId = getPartIdFromFile(part.file);
+        const mesh = new THREE.Mesh(part.geometry, createPartMaterial(part.file, bodyMat, accentMat));
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        mesh.scale.copy(targetMesh.scale);
+        mesh.rotation.copy(targetMesh.rotation);
+        mesh.position.copy(targetMesh.position);
+
+        const r1 = seededUnit(i + 1.71);
+        const r2 = seededUnit(i + 8.33);
+        const r3 = seededUnit(i + 23.57);
+        const spread = 3.8 + r1 * 4.6;
+        const angle = (i / Math.max(1, parts.length)) * Math.PI * 2 + r2 * 0.6;
+        const lift = -1.4 + r3 * 4.8;
+        const depth = 2.2 + r2 * 5.1;
+
+        const startPosition = mesh.position.clone().add(
+          new THREE.Vector3(Math.cos(angle) * spread, lift, Math.sin(angle) * spread + depth)
         );
-        fallback.position.y = 0.5;
-        carGroup.add(fallback);
-      }
-    );
+        const startRotation = new THREE.Euler(
+          mesh.rotation.x + (r1 - 0.5) * 2.2,
+          mesh.rotation.y + (r2 - 0.5) * 2.4,
+          mesh.rotation.z + (r3 - 0.5) * 1.4
+        );
+        const startScale = mesh.scale.clone().multiplyScalar(0.56 + r1 * 0.28);
+
+        mesh.userData.finalPosition = mesh.position.clone();
+        mesh.userData.finalRotation = mesh.rotation.clone();
+        mesh.userData.finalScale = mesh.scale.clone();
+        mesh.userData.partId = partId;
+        mesh.userData.startPosition = startPosition;
+        mesh.userData.startRotation = startRotation;
+        mesh.userData.startScale = startScale;
+        const normalizedIndex = parts.length > 1 ? i / (parts.length - 1) : 0;
+        mesh.userData.delayNormalized = normalizedIndex * ASSEMBLY_STAGGER_NORMALIZED;
+
+        mesh.position.copy(startPosition);
+        mesh.rotation.copy(startRotation);
+        mesh.scale.copy(startScale);
+
+        group.add(mesh);
+        assemblyMeshes.push(mesh);
+      });
+
+      return assemblyMeshes;
+    }
 
     // ========== WIND TUNNEL EQUIPMENT (positioned around the car) ==========
     const windTunnelGroup = new THREE.Group();
@@ -419,7 +850,7 @@ export default function useThreeStage({
     windTunnelGroup.visible = false;
     scene.add(windTunnelGroup);
 
-    // Industrial fan/blower machine (on the RIGHT side - car faces INTO the wind)
+    // Industrial fan/blower machine (on the LEFT side for left-to-right flow)
     const fanGroup = new THREE.Group();
 
     // Fan housing - larger industrial look
@@ -477,9 +908,9 @@ export default function useThreeStage({
     basePlate.position.y = -4;
     fanGroup.add(basePlate);
 
-    // Wind machine on the RIGHT side - wind blows LEFT toward car front
-    fanGroup.position.set(18, 1, 0);
-    fanGroup.rotation.y = Math.PI; // Face toward the car
+    // Wind machine on the LEFT side - wind blows RIGHT toward the car
+    fanGroup.position.set(-28, 1, 0);
+    fanGroup.rotation.y = 0;
     windTunnelGroup.add(fanGroup);
 
     // Track/Road under car (replaces podium in aero mode)
@@ -513,7 +944,7 @@ export default function useThreeStage({
     windTunnelGroup.add(trackGroup);
     sceneObjectsRef.current.windTunnelGroup = windTunnelGroup;
 
-    // ========== AIRFLOW PARTICLES (flow from RIGHT to LEFT - toward car) ==========
+    // ========== AIRFLOW PARTICLES (flow from LEFT to RIGHT - toward car) ==========
     let particles = null;
     const particleCount = 10000;
     const particlePositions = new Float32Array(particleCount * 3);
@@ -527,20 +958,20 @@ export default function useThreeStage({
     const carBounds = { minX: -8, maxX: 6, minY: -1.5, maxY: 3, minZ: -3, maxZ: 3 };
 
     function initParticle(i) {
-      // Start from RIGHT side and flow LEFT
-      particlePositions[i * 3] = 15 + Math.random() * 8;
-      particlePositions[i * 3 + 1] = -2 + Math.random() * 5;
-      particlePositions[i * 3 + 2] = -4 + Math.random() * 8;
+      // Start from LEFT side and flow RIGHT
+      particlePositions[i * 3] = -30 - Math.random() * 6;
+      particlePositions[i * 3 + 1] = -1.5 + Math.random() * 3.2;
+      particlePositions[i * 3 + 2] = -2.4 + Math.random() * 4.8;
       particleOriginalY[i] = particlePositions[i * 3 + 1];
       particleOriginalZ[i] = particlePositions[i * 3 + 2];
       particlePhase[i] = Math.random() * Math.PI * 2;
-      particleSpeeds[i] = 0.08 + Math.random() * 0.25;
+      particleSpeeds[i] = 0.18 + Math.random() * 0.2;
     }
 
     for (let i = 0; i < particleCount; i++) {
       initParticle(i);
       // Spread particles across the whole tunnel initially
-      particlePositions[i * 3] = -15 + Math.random() * 35;
+      particlePositions[i * 3] = -24 + Math.random() * 48;
       // Initial colors - cyan/blue
       particleColors[i * 3] = 0.0;
       particleColors[i * 3 + 1] = 0.7;
@@ -574,6 +1005,8 @@ export default function useThreeStage({
 
     // ========== ANIMATION LOOP ==========
     const clock = new THREE.Clock();
+    const podiumBounds = new THREE.Box3();
+    const podiumTargetCenter = new THREE.Vector3();
 
     // Store car center for pin positioning
     let carCenterScreen = { x: 0, y: 0 };
@@ -603,11 +1036,59 @@ export default function useThreeStage({
         // Skip if being dragged
         if (p.el.dataset.dragging === "true") return;
 
+        let screenX = carCenterScreen.x;
+        let screenY = carCenterScreen.y;
+        const anchor = sceneObjectsRef.current.hotspotAnchors?.[p.id];
+        if (sceneObjectsRef.current.carMesh && anchor) {
+          const worldPoint = anchor.clone();
+          sceneObjectsRef.current.carMesh.updateMatrixWorld(true);
+          worldPoint.applyMatrix4(sceneObjectsRef.current.carMesh.matrixWorld);
+          worldPoint.project(camera);
+          screenX = (worldPoint.x * 0.5 + 0.5) * window.innerWidth;
+          screenY = (-worldPoint.y * 0.5 + 0.5) * window.innerHeight;
+        }
+
         const offset = window.pinOffsets[p.id] || { x: 0, y: 0 };
-        p.el.style.left = `${carCenterScreen.x + offset.x}px`;
-        p.el.style.top = `${carCenterScreen.y + offset.y}px`;
+        p.el.style.left = `${screenX + offset.x}px`;
+        p.el.style.top = `${screenY + offset.y}px`;
         p.el.style.display = "block";
       });
+    }
+
+    function updateHeroBlueprintAnchors(currentPhase) {
+      const showBlueprint = currentPhase === "hero";
+      if (!showBlueprint) {
+        window.dispatchEvent(
+          new CustomEvent("three-blueprint-anchors", {
+            detail: { visible: false, points: {} },
+          })
+        );
+        return;
+      }
+
+      const anchorMap = sceneObjectsRef.current.hotspotAnchors;
+      const mesh = sceneObjectsRef.current.carMesh;
+      if (!anchorMap || !mesh) return;
+
+      mesh.updateMatrixWorld(true);
+      const points = {};
+
+      BLUEPRINT_LABEL_IDS.forEach((id) => {
+        const anchor = anchorMap[id];
+        if (!anchor) return;
+        const worldPoint = anchor.clone().applyMatrix4(mesh.matrixWorld);
+        worldPoint.project(camera);
+        points[id] = {
+          x: (worldPoint.x * 0.5 + 0.5) * window.innerWidth,
+          y: (-worldPoint.y * 0.5 + 0.5) * window.innerHeight,
+        };
+      });
+
+      window.dispatchEvent(
+        new CustomEvent("three-blueprint-anchors", {
+          detail: { visible: true, points },
+        })
+      );
     }
 
     // Make pins draggable
@@ -615,6 +1096,8 @@ export default function useThreeStage({
       pins.forEach((p) => {
         let isDragging = false;
         let startX, startY, startOffsetX, startOffsetY;
+        let dragStartLeft = 0;
+        let dragStartTop = 0;
 
         p.el.addEventListener("mousedown", (e) => {
           if (e.shiftKey) { // Hold Shift to drag
@@ -626,6 +1109,8 @@ export default function useThreeStage({
             startY = e.clientY;
             startOffsetX = window.pinOffsets[p.id].x;
             startOffsetY = window.pinOffsets[p.id].y;
+            dragStartLeft = parseFloat(p.el.style.left || "0");
+            dragStartTop = parseFloat(p.el.style.top || "0");
             p.el.style.cursor = "grabbing";
           }
         });
@@ -636,8 +1121,8 @@ export default function useThreeStage({
           const dy = e.clientY - startY;
           window.pinOffsets[p.id].x = startOffsetX + dx;
           window.pinOffsets[p.id].y = startOffsetY + dy;
-          p.el.style.left = `${carCenterScreen.x + window.pinOffsets[p.id].x}px`;
-          p.el.style.top = `${carCenterScreen.y + window.pinOffsets[p.id].y}px`;
+          p.el.style.left = `${dragStartLeft + dx}px`;
+          p.el.style.top = `${dragStartTop + dy}px`;
         });
 
         window.addEventListener("mouseup", () => {
@@ -666,8 +1151,29 @@ export default function useThreeStage({
       podiumMaterial.color.set(isLight ? 0xcccccc : 0x1a1a1a);
       ringMaterial.color.set(isLight ? 0x888888 : 0x444444);
 
-      // ===== VIEW MODE (Engineering) =====
-      const mode = viewModeRef.current || "render";
+      if (sceneObjectsRef.current.carMesh?.material) {
+        const meshMaterial = sceneObjectsRef.current.carMesh.material;
+        meshMaterial.vertexColors = isLight;
+        meshMaterial.color.setHex(isLight ? 0xffffff : 0xf6f8ff);
+        meshMaterial.emissive.setHex(isLight ? 0x000000 : 0x101218);
+        meshMaterial.emissiveIntensity = isLight ? 0 : 0.06;
+        meshMaterial.needsUpdate = true;
+      }
+
+      const assemblyThemeColor = isLight ? null : 0xf6f8ff;
+      (sceneObjectsRef.current.assemblyMeshes || []).forEach((assemblyMesh) => {
+        const material = assemblyMesh.material;
+        if (!material) return;
+        const baseColorHex = material.userData?.baseColorHex || getPartColor(assemblyMesh.userData.partId);
+        material.color.setHex(assemblyThemeColor || baseColorHex);
+      });
+
+      const currentPhase = phaseRef.current;
+
+      // ===== VIEW MODE (Engineering only) =====
+      const mode = currentPhase === "engineering"
+        ? (viewModeRef.current || "render")
+        : "render";
       if (sceneObjectsRef.current.carMesh) {
         const mesh = sceneObjectsRef.current.carMesh;
         const wire = sceneObjectsRef.current.wireframe;
@@ -697,7 +1203,19 @@ export default function useThreeStage({
       }
 
       // ===== PHASE-BASED SCENE =====
-      const currentPhase = phaseRef.current;
+      const sceneOffsetX = currentPhase === "engineering"
+        ? 1.6
+        : (currentPhase === "integration" ? -1.8 : SCENE_X_OFFSET);
+      const orbitState = dragOrbitRef.current;
+      orbitState.yaw += (orbitState.targetYaw - orbitState.yaw) * 0.14;
+      orbitState.pitch += (orbitState.targetPitch - orbitState.pitch) * 0.14;
+      if (!ROTATION_ENABLED_PHASES.has(currentPhase) && !orbitState.active) {
+        orbitState.targetYaw *= 0.92;
+        orbitState.targetPitch *= 0.92;
+      }
+      canvas.style.cursor = ROTATION_ENABLED_PHASES.has(currentPhase)
+        ? (orbitState.active ? "grabbing" : "grab")
+        : "default";
 
       // Debug: log phase changes
       if (!window._lastPhase || window._lastPhase !== currentPhase) {
@@ -707,25 +1225,30 @@ export default function useThreeStage({
         window._aeroDebugLogged = false;
       }
 
-      // Get phase-specific config (fallback to engineering if unknown phase)
-      const phaseConfig = PHASE_CONFIGS[currentPhase] || PHASE_CONFIGS.engineering;
+      // Get phase-specific config (fallback to engineering if unknown phase).
+      // Hero config is adapted to viewport width to keep the car in frame.
+      const basePhaseConfig = PHASE_CONFIGS[currentPhase] || PHASE_CONFIGS.engineering;
+      const phaseConfig = getPhaseConfigForViewport(currentPhase, basePhaseConfig);
+      if (currentPhase === "hero") {
+        const heroTune = heroPlacementRef.current || HERO_PLACEMENT_DEFAULT;
+        phaseConfig.carPos.x = heroTune.carPosX;
+        phaseConfig.carPos.y = heroTune.carPosY;
+        phaseConfig.carPos.z = heroTune.carPosZ;
+        phaseConfig.carScale = heroTune.carScale;
+        phaseConfig.carRotation = heroTune.carRotation;
+      }
 
-      // Debug controls ADD to phase config (for fine-tuning)
-      const debugOffset = carOffsetRef.current || { x: 0, y: 0, z: 0 };
-      const debugScale = carScaleRef.current || 1;
-      const debugPos = carPosRef.current || { x: 0, y: 0, z: 0 };
-
-      // Apply phase config + debug offset to car mesh
+      // Apply phase config to car mesh
       if (sceneObjectsRef.current.carMesh) {
         const finalOffset = {
-          x: phaseConfig.carOffset.x + debugOffset.x,
-          y: phaseConfig.carOffset.y + debugOffset.y,
-          z: phaseConfig.carOffset.z + debugOffset.z,
+          x: phaseConfig.carOffset.x,
+          y: phaseConfig.carOffset.y,
+          z: phaseConfig.carOffset.z,
         };
         sceneObjectsRef.current.carMesh.position.set(finalOffset.x, finalOffset.y, finalOffset.z);
 
         const baseScale = sceneObjectsRef.current.carMesh.userData.baseScale || 1;
-        const finalScale = baseScale * phaseConfig.carScale * debugScale;
+        const finalScale = baseScale * phaseConfig.carScale;
         sceneObjectsRef.current.carMesh.scale.setScalar(finalScale);
 
         // Sync wireframe and vertex points with car mesh
@@ -739,12 +1262,176 @@ export default function useThreeStage({
         }
       }
 
-      // Position car container based on phase config + debug adjustment + global offset
+      const assemblyState = sceneObjectsRef.current.assemblyState;
+      const assemblyGroup = sceneObjectsRef.current.assemblyGroup;
+      const assemblyMeshes = sceneObjectsRef.current.assemblyMeshes || [];
+
+      if (assemblyState && assemblyMeshes.length && sceneObjectsRef.current.carMesh) {
+        const targetMesh = sceneObjectsRef.current.carMesh;
+        const integrationPhase = currentPhase === "integration";
+        assemblyState.active = integrationPhase;
+        if (!(assemblyState.placedParts instanceof Set)) {
+          assemblyState.placedParts = new Set();
+        }
+
+        assemblyMeshes.forEach((mesh) => {
+          mesh.userData.finalPosition.copy(targetMesh.position);
+          mesh.userData.finalRotation.copy(targetMesh.rotation);
+          mesh.userData.finalScale.copy(targetMesh.scale);
+        });
+
+        const applyAssemblyTransform = (mesh, t) => {
+          const eased = clamp01(t);
+          const posT = easeOutBack(eased);
+          const rotT = easeOutCubic(eased);
+          const scaleT = easeOutBack(eased);
+          mesh.position.lerpVectors(mesh.userData.startPosition, mesh.userData.finalPosition, posT);
+          mesh.scale.lerpVectors(mesh.userData.startScale, mesh.userData.finalScale, scaleT);
+          mesh.rotation.x = THREE.MathUtils.lerp(mesh.userData.startRotation.x, mesh.userData.finalRotation.x, rotT);
+          mesh.rotation.y = THREE.MathUtils.lerp(mesh.userData.startRotation.y, mesh.userData.finalRotation.y, rotT);
+          mesh.rotation.z = THREE.MathUtils.lerp(mesh.userData.startRotation.z, mesh.userData.finalRotation.z, rotT);
+          if (mesh.material && mesh.material.transparent) {
+            mesh.material.opacity = ASSEMBLY_MIN_OPACITY + (1 - ASSEMBLY_MIN_OPACITY) * eased;
+          }
+        };
+
+        const applyStagedFloat = (mesh, index, now) => {
+          const floatT = now * 1.25 + index * 0.67;
+          const sx = mesh.userData.startPosition.x;
+          const sy = mesh.userData.startPosition.y;
+          const sz = mesh.userData.startPosition.z;
+
+          mesh.position.set(
+            sx + Math.sin(floatT) * 0.35,
+            sy + Math.cos(floatT * 1.2) * 0.24,
+            sz + Math.sin(floatT * 0.78) * 0.32
+          );
+
+          const pulse = 1.02 + Math.sin(floatT * 1.5) * 0.03;
+          mesh.scale.copy(mesh.userData.startScale).multiplyScalar(pulse);
+
+          mesh.rotation.x = mesh.userData.startRotation.x + Math.sin(floatT * 1.1) * 0.12;
+          mesh.rotation.y = mesh.userData.startRotation.y + Math.cos(floatT * 0.95) * 0.16;
+          mesh.rotation.z = mesh.userData.startRotation.z + Math.sin(floatT * 1.35) * 0.1;
+        };
+
+        if (integrationPhase) {
+          if (assemblyGroup) assemblyGroup.visible = true;
+
+          if (assemblyState.mode === "auto") {
+            const running = !!assemblyState.autoRunning;
+            const completed = !!assemblyState.autoCompleted;
+            const startTime = assemblyState.autoStartTime || time;
+            const elapsed = running ? Math.max(0, time - startTime) : 0;
+            const totalDuration = assemblyMeshes.length * AUTO_ASSEMBLY_STEP_SECONDS;
+
+            assemblyMeshes.forEach((mesh, index) => {
+              const partStart = index * AUTO_ASSEMBLY_STEP_SECONDS;
+              if (running) {
+                if (elapsed < partStart) {
+                  applyStagedFloat(mesh, index, time);
+                } else {
+                  const local = clamp01((elapsed - partStart) / 0.92);
+                  applyAssemblyTransform(mesh, local);
+                }
+              } else if (completed) {
+                applyAssemblyTransform(mesh, 1);
+              } else {
+                applyStagedFloat(mesh, index, time);
+              }
+
+              if (mesh.material) {
+                const staged = !completed && (!running || elapsed < partStart);
+                mesh.material.emissive.setHex(staged ? 0x0f4f8e : 0x000000);
+                mesh.material.emissiveIntensity = staged
+                  ? 0.12 + (Math.sin(time * 4 + index) * 0.08 + 0.08)
+                  : 0;
+                if (mesh.material.transparent && staged) {
+                  mesh.material.opacity = 0.86;
+                }
+              }
+            });
+
+            if (running && elapsed >= totalDuration + 0.2 && !assemblyState.autoCompleted) {
+              assemblyState.autoRunning = false;
+              assemblyState.autoCompleted = true;
+              assemblyState.placedParts = new Set(
+                assemblyMeshes.map((mesh) => mesh.userData.partId).filter(Boolean)
+              );
+              window.dispatchEvent(new CustomEvent("integration-auto-complete"));
+            }
+          } else {
+            // BUILD mode - smooth click-to-place animation
+            assemblyMeshes.forEach((mesh, index) => {
+              const partId = mesh.userData.partId;
+              const placed = partId ? assemblyState.placedParts.has(partId) : false;
+              const targetT = placed ? 1 : 0;
+
+              // Initialize placement progress
+              if (mesh.userData.placementT === undefined) mesh.userData.placementT = 0;
+
+              // Smooth lerp toward target
+              mesh.userData.placementT += (targetT - mesh.userData.placementT) * 0.065;
+              if (Math.abs(mesh.userData.placementT - targetT) < 0.003) {
+                mesh.userData.placementT = targetT;
+              }
+
+              const t = mesh.userData.placementT;
+
+              if (t < 0.01) {
+                // Not placed - floating animation
+                applyStagedFloat(mesh, index, time);
+              } else if (t > 0.99) {
+                // Fully placed
+                applyAssemblyTransform(mesh, 1);
+              } else {
+                // Animating placement - blend from float to final
+                applyAssemblyTransform(mesh, t);
+              }
+
+              if (mesh.material) {
+                const notPlaced = !placed;
+                const animating = t > 0.01 && t < 0.99;
+                mesh.material.emissive.setHex(
+                  animating ? 0x4db5ff : (notPlaced ? 0x0f4f8e : 0x000000)
+                );
+                mesh.material.emissiveIntensity = animating
+                  ? 0.35
+                  : (notPlaced ? 0.12 + (Math.sin(time * 4 + index) * 0.08 + 0.08) : 0);
+                if (mesh.material.transparent) {
+                  mesh.material.opacity = notPlaced ? 0.75 : (animating ? 0.85 + t * 0.15 : 1);
+                }
+              }
+            });
+          }
+        } else {
+          if (assemblyGroup) assemblyGroup.visible = false;
+          assemblyMeshes.forEach((mesh) => {
+            applyAssemblyTransform(mesh, 1);
+            if (mesh.material) {
+              mesh.material.emissive.setHex(0x000000);
+              mesh.material.emissiveIntensity = 0;
+            }
+          });
+        }
+      }
+
+      // Position car container based on phase config + global offset
       carContainer.position.set(
-        phaseConfig.carPos.x + debugPos.x + SCENE_X_OFFSET,
-        phaseConfig.carPos.y + debugPos.y,
-        phaseConfig.carPos.z + debugPos.z
+        phaseConfig.carPos.x + sceneOffsetX,
+        phaseConfig.carPos.y,
+        phaseConfig.carPos.z
       );
+
+      if (currentPhase === "engineering" && sceneObjectsRef.current.carMesh) {
+        podiumBounds.setFromObject(sceneObjectsRef.current.carMesh);
+        podiumBounds.getCenter(podiumTargetCenter);
+        podiumGroup.position.x = podiumTargetCenter.x;
+        podiumGroup.position.z = podiumTargetCenter.z;
+      } else {
+        podiumGroup.position.x = -3 + SCENE_X_OFFSET;
+        podiumGroup.position.z = 0;
+      }
 
       // Show/hide elements based on phase config
       podiumGroup.visible = phaseConfig.showPodium;
@@ -753,28 +1440,37 @@ export default function useThreeStage({
       // Camera position based on phase config
       // Skip lerp for aero phase - orbit camera is handled in aero section
       if (currentPhase !== "aero") {
+        zoomRef.current.value += (zoomRef.current.target - zoomRef.current.value) * 0.14;
+        const engineeringZoom = currentPhase === "engineering" ? zoomRef.current.value : 0;
         const targetCameraPos = new THREE.Vector3(
           phaseConfig.cameraPos.x,
           phaseConfig.cameraPos.y,
-          phaseConfig.cameraPos.z
+          phaseConfig.cameraPos.z + engineeringZoom
         );
         camera.position.lerp(targetCameraPos, 0.02);
       }
 
       // Hide car in sponsors and team phases, show in others
-      const carVisible = currentPhase !== "sponsors" && currentPhase !== "team";
+      const carVisible = currentPhase !== "sponsors" && currentPhase !== "team" && currentPhase !== "achievements";
+      const assemblySequenceActive = currentPhase === "integration";
       if (sceneObjectsRef.current.carMesh) {
-        sceneObjectsRef.current.carMesh.visible = carVisible;
+        sceneObjectsRef.current.carMesh.visible =
+          sceneObjectsRef.current.carMesh.visible && carVisible && !assemblySequenceActive;
       }
       if (sceneObjectsRef.current.wireframe) {
-        sceneObjectsRef.current.wireframe.visible = carVisible;
+        sceneObjectsRef.current.wireframe.visible =
+          sceneObjectsRef.current.wireframe.visible && carVisible && !assemblySequenceActive;
       }
       if (sceneObjectsRef.current.vertexPoints) {
-        sceneObjectsRef.current.vertexPoints.visible = carVisible;
+        sceneObjectsRef.current.vertexPoints.visible =
+          sceneObjectsRef.current.vertexPoints.visible && carVisible && !assemblySequenceActive;
+      }
+      if (sceneObjectsRef.current.assemblyGroup) {
+        sceneObjectsRef.current.assemblyGroup.visible = carVisible && assemblySequenceActive;
       }
 
       // Update Spotlight
-      if (currentPhase === 'hero' || currentPhase === 'engineering' || currentPhase === 'garage') {
+      if (currentPhase === 'hero' || currentPhase === 'engineering') {
          spotLight.intensity = 100;
          // Lerp the spotlight target to the mouse position on the ground plane
          // The planeIntersect is updated in the mousemove listener, but we need to do it here properly if camera moves
@@ -792,19 +1488,21 @@ export default function useThreeStage({
 
       // Car rotation based on phase
       if (currentPhase === "hero") {
-        // Static position for hero - no auto rotation
-        carGroup.rotation.y = phaseConfig.carRotation;
+        carGroup.rotation.y = phaseConfig.carRotation + orbitState.yaw;
+        carGroup.rotation.x = orbitState.pitch * 0.4;
       }
       else if (currentPhase === "engineering") {
-        carGroup.rotation.y = phaseConfig.carRotation;
+        carGroup.rotation.y = phaseConfig.carRotation + orbitState.yaw;
+        carGroup.rotation.x = orbitState.pitch * 0.42;
       }
-      else if (currentPhase === "garage") {
-        // Static for garage too
-        carGroup.rotation.y = phaseConfig.carRotation;
+      else if (currentPhase === "integration") {
+        carGroup.rotation.y = phaseConfig.carRotation + orbitState.yaw;
+        carGroup.rotation.x = orbitState.pitch * 0.36;
       }
       else if (currentPhase === "aero") {
         // Car stays at fixed rotation
         carGroup.rotation.y = phaseConfig.carRotation;
+        carGroup.rotation.x = 0;
 
         // Ensure wind tunnel is visible
         windTunnelGroup.visible = true;
@@ -822,20 +1520,12 @@ export default function useThreeStage({
           window._aeroDebugLogged = true;
         }
 
-        // 360 degree CAMERA orbit around the scene
-        const orbitAngle = aeroRotationRef.current || 0;
-        const orbitRadius = 18;
-        const orbitHeight = 5;
-        const centerX = phaseConfig.carPos.x + SCENE_X_OFFSET;
+        const centerX = phaseConfig.carPos.x + sceneOffsetX;
         const centerZ = phaseConfig.carPos.z;
-
-        // Calculate camera position orbiting around the center
-        const camX = centerX + Math.sin(orbitAngle) * orbitRadius;
-        const camZ = centerZ + Math.cos(orbitAngle) * orbitRadius;
-        camera.position.set(camX, orbitHeight, camZ);
-
-        // Camera always looks at the center of the scene (car area)
-        camera.lookAt(centerX, 0.5, centerZ);
+        // Side view camera - particles flow left-to-right across screen
+        const targetCam = new THREE.Vector3(centerX - 2, 2.8, centerZ + 24);
+        camera.position.lerp(targetCam, 0.08);
+        camera.lookAt(centerX - 1, 0.3, centerZ);
 
         // Get current preset for visual effects
         const currentPreset = aeroPresetRef.current || "normal";
@@ -874,11 +1564,11 @@ export default function useThreeStage({
             const y = positions[i * 3 + 1];
             const z = positions[i * 3 + 2];
 
-            // Move particles from RIGHT to LEFT
-            positions[i * 3] -= particleSpeeds[i] * speedMult;
+            // Move particles from LEFT to RIGHT
+            positions[i * 3] += particleSpeeds[i] * speedMult;
 
             // Turbulence based on preset
-            const turbulence = isExtreme ? 0.3 : (isNull ? 0.05 : 0.12);
+            const turbulence = isExtreme ? 0.14 : (isNull ? 0.02 : 0.06);
             positions[i * 3 + 1] = origY[i] + Math.sin(time * 4 + phases[i]) * turbulence;
             positions[i * 3 + 2] = origZ[i] + Math.cos(time * 3 + phases[i] * 0.7) * turbulence * 0.5;
 
@@ -889,7 +1579,7 @@ export default function useThreeStage({
 
             if (inCarZone) {
               // HEAT EFFECT - particles turn red/orange when hitting the car
-              const heatFactor = Math.min(1, (bounds.maxX - x) / (bounds.maxX - bounds.minX));
+              const heatFactor = Math.min(1, (x - bounds.minX) / (bounds.maxX - bounds.minX));
 
               if (isExtreme) {
                 // Extreme mode: intense red/orange heat
@@ -904,7 +1594,7 @@ export default function useThreeStage({
               }
 
               // Deflect around car body
-              const deflect = isExtreme ? 0.15 : 0.08;
+              const deflect = isExtreme ? 0.06 : 0.028;
               positions[i * 3 + 2] += (z > 0 ? deflect : -deflect);
               positions[i * 3 + 1] += (y > 1 ? deflect * 0.7 : -deflect * 0.7);
             } else {
@@ -929,8 +1619,8 @@ export default function useThreeStage({
               }
             }
 
-            // Reset particle when it exits left
-            if (positions[i * 3] < -20) {
+            // Reset particle when it exits right
+            if (positions[i * 3] > 24) {
               initP(i);
             }
           }
@@ -938,7 +1628,7 @@ export default function useThreeStage({
           particles.geometry.attributes.color.needsUpdate = true;
         }
       }
-      else if (currentPhase === "sponsors" || currentPhase === "team") {
+      else if (currentPhase === "sponsors" || currentPhase === "team" || currentPhase === "achievements") {
         // Hide car completely for sponsors and team sections
         if (sceneObjectsRef.current.carMesh) {
           sceneObjectsRef.current.carMesh.visible = false;
@@ -949,6 +1639,9 @@ export default function useThreeStage({
         if (sceneObjectsRef.current.vertexPoints) {
           sceneObjectsRef.current.vertexPoints.visible = false;
         }
+        if (sceneObjectsRef.current.assemblyGroup) {
+          sceneObjectsRef.current.assemblyGroup.visible = false;
+        }
         podiumGroup.visible = false;
         windTunnelGroup.visible = false;
         if (particles) particles.visible = false;
@@ -957,15 +1650,19 @@ export default function useThreeStage({
       // Camera looks at where the car is positioned (with global offset)
       // Skip for aero phase - orbit camera is handled above
       if (currentPhase !== "aero") {
+        const lookBiasX = currentPhase === "hero"
+          ? (heroPlacementRef.current?.lookBiasX ?? HERO_LOOK_BIAS_DEFAULT)
+          : (currentPhase === "engineering" ? 0 : 0);
         const carLookAt = new THREE.Vector3(
-          phaseConfig.carPos.x + debugPos.x + SCENE_X_OFFSET,
-          phaseConfig.carPos.y + debugPos.y + 1, // Slightly above car center
-          phaseConfig.carPos.z + debugPos.z
+          phaseConfig.carPos.x + sceneOffsetX + lookBiasX,
+          phaseConfig.carPos.y + 1, // Slightly above car center
+          phaseConfig.carPos.z
         );
         camera.lookAt(carLookAt);
       }
 
       updatePins();
+      updateHeroBlueprintAnchors(currentPhase);
       renderer.render(scene, camera);
       } catch (err) {
         console.error("Animation loop error:", err);
@@ -986,6 +1683,19 @@ export default function useThreeStage({
     return () => {
       window.removeEventListener("resize", onResize);
       window.removeEventListener('mousemove', updateSpotlight);
+      window.removeEventListener("integration-mode-change", onIntegrationModeChange);
+      window.removeEventListener("integration-reset", onIntegrationReset);
+      window.removeEventListener("integration-select-part", onIntegrationSelectPart);
+      window.removeEventListener("integration-place-part", onIntegrationPlacePart);
+      window.removeEventListener("integration-start-auto", onIntegrationStartAuto);
+      window.removeEventListener("hero-placement-set", onHeroPlacementSet);
+      window.removeEventListener("hero-placement-lock", onHeroPlacementLock);
+      window.removeEventListener("hero-placement-reset", onHeroPlacementReset);
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+      canvas.removeEventListener("wheel", onWheel);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       renderer.dispose();
     };

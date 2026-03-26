@@ -11,19 +11,19 @@ const teamMembers = [
     initials: "EC",
     role: "Technical Lead & Team Principal",
     tagline: "Engineering Excellence",
-    shortBio: "Leading engineering decisions and team coordination. Driving innovation through CAD, CFD, and data-driven design.",
-    fullBio: `As Technical Lead and Team Principal, Eve is responsible for all engineering and performance aspects of the project. She leads the CAD modelling process using Fusion 360, creating and refining the car design to ensure it meets both performance goals and competition regulations.
+    shortBio: "Led EK5 development from concept through nationals. ANSYS CFD simulation expertise and Python race simulation.",
+    fullBio: `As Technical Lead and Team Principal, Eve led the EK5 from initial concept through to nationals competition. She drove the full CAD modelling process in Fusion 360, iterating the design across multiple revisions to meet both performance targets and 2025 technical regulations.
 
-She ensures full compliance with all regulations throughout the design process, oversees testing, iteration, and data interpretation, using results to inform performance improvements and optimise the final design.
+Eve developed the team's ANSYS CFD simulation pipeline, running over 40 simulations to optimise downforce, reduce drag, and validate airflow behaviour across the full car assembly. She also built Python-based race simulations to model energy deployment and predict lap performance under varying track conditions.
 
-As Team Principal, she manages the team and ensures all goals are met, as well as communicating with sponsors and partners.`,
+As Team Principal, she coordinated all engineering milestones, managed sponsor relationships, and ensured the team delivered on every deadline from regional heats to the national finals.`,
     color: "#8B5CF6",
     gradient: "linear-gradient(135deg, #8B5CF6, #6366F1)",
     responsibilities: [
       { task: "Research - aerodynamics/streamlining", level: "R + A" },
       { task: "CAD design - Fusion 360", level: "R + A" },
-      { task: "CFD testing of designs", level: "R + A" },
-      { task: "Evaluation of CFD - improvements", level: "R + A" },
+      { task: "CFD testing of designs (ANSYS)", level: "R + A" },
+      { task: "Python race simulation development", level: "R + A" },
       { task: "Development of sponsorship pitches", level: "R + A" },
       { task: "Contact and securing sponsors", level: "R" },
       { task: "Social media setup & management", level: "R + A" },
@@ -32,77 +32,77 @@ As Team Principal, she manages the team and ensures all goals are met, as well a
       { task: "Merchandise development", level: "R + A" }
     ],
     skills: [
-      { name: "Fusion 360", level: 95 },
-      { name: "CFD Analysis", level: 90 },
+      { name: "Fusion 360", level: 97 },
+      { name: "ANSYS CFD", level: 92 },
+      { name: "Python Simulation", level: 90 },
       { name: "Aerodynamics", level: 88 },
-      { name: "Project Management", level: 85 },
-      { name: "Sponsor Relations", level: 80 }
+      { name: "Project Management", level: 85 }
     ],
     achievements: ["CAD Lead", "CFD Expert", "Team Principal"],
     email: "14carrutherse@beaulieu.jersey.sch.uk"
   },
   {
     id: 2,
-    name: "Florence",
+    name: "Florence Taylor",
     initials: "FL",
     role: "Scrutineering Lead",
     tagline: "Compliance & Safety",
-    shortBio: "Ensuring compliance, safety, and rules adherence. Leading physical testing and risk assessment.",
-    fullBio: `As Scrutineering Lead, Florence is responsible for ensuring that the car fully complies with all technical, safety, and competition regulations. She leads the scrutineering process by carefully checking the design and final build against the official rules.
+    shortBio: "Nationals-level compliance documentation and 3-stage inspection protocol. Leading scrutineering and risk assessment.",
+    fullBio: `As Scrutineering Lead, Florence developed and executed the team's nationals-level compliance documentation, ensuring the EK5 passed every technical, safety, and competition regulation check from regional heats through to the national finals.
 
-Florence ensures that all team decisions are evidence-based and rules compliant. She works closely with the Technical Lead to identify and resolve any potential regulation issues early in the design process.
+She designed a rigorous 3-stage inspection protocol covering pre-build design review, mid-build dimensional checks, and final pre-race compliance verification. This systematic approach eliminated last-minute issues and gave the team confidence at scrutineering.
 
-She writes and maintains the team's risk assessment, ensuring that all hazards are identified and controlled.`,
+Florence also owns the team's risk assessment framework, identifying hazards across design, manufacturing, and race-day operations, with evidence-based mitigation strategies for each.`,
     color: "#F59E0B",
     gradient: "linear-gradient(135deg, #F59E0B, #EAB308)",
     responsibilities: [
-      { task: "Scrutineering checks", level: "A" },
+      { task: "Nationals scrutineering checks", level: "A" },
+      { task: "3-stage inspection protocol", level: "R + A" },
       { task: "Data analysis - air tunnel testing", level: "R + A" },
       { task: "Data analysis - track testing", level: "R + A" },
       { task: "Production of D+E Portfolio", level: "R" },
       { task: "Risk assessment management", level: "R + A" },
-      { task: "Compliance verification", level: "R + A" },
-      { task: "Safety procedures enforcement", level: "R + A" }
+      { task: "Quality control verification", level: "R + A" }
     ],
     skills: [
+      { name: "Nationals Scrutineering", level: 95 },
+      { name: "Quality Control", level: 92 },
       { name: "Risk Assessment", level: 92 },
-      { name: "Compliance Testing", level: 95 },
       { name: "Data Analysis", level: 88 },
-      { name: "Technical Docs", level: 85 },
-      { name: "Safety Management", level: 90 }
+      { name: "Technical Docs", level: 85 }
     ],
     achievements: ["Safety Lead", "Compliance Expert", "Data Analyst"],
     email: null
   },
   {
     id: 3,
-    name: "Abigail",
+    name: "Abigail Taylor",
     initials: "AB",
     role: "Creative Lead",
     tagline: "Visual Identity",
-    shortBio: "Crafting the visual identity and brand. Leading design, rendering, and presentation materials.",
-    fullBio: `As Creative Lead, Abigail is responsible for all visual, branding, and presentation elements of the project. She develops the team's visual identity, including the logo, colour scheme, and overall brand style.
+    shortBio: "Designed nationals portfolios and pit display. Expanded brand identity across all team touchpoints.",
+    fullBio: `As Creative Lead, Abigail designed and produced both the Enterprise & Marketing and Engineering portfolios that the team presented at nationals. Her layout work balanced technical depth with visual clarity, earning strong marks from judges.
 
-Abigail leads the layout, design, and production of both the enterprise and marketing portfolio, as well as the pit display. She is also responsible for rendering and livery, creating a chic and cohesive design that ensures Team Ekleipsis is instantly recognisable.
+She also designed the team's pit display, creating a cohesive visual environment that communicated Team Ekleipsis' brand story, technical achievements, and sponsor partnerships in a single compelling space.
 
-She provides realistic project deadlines from a creative perspective and identifies the resources and tools needed to produce high-quality visual and marketing materials.`,
+Beyond competition materials, Abigail expanded the brand identity across every touchpoint — from livery and merchandise to social media templates and the team website — ensuring Team Ekleipsis is instantly recognisable wherever it appears.`,
     color: "#EC4899",
     gradient: "linear-gradient(135deg, #EC4899, #F472B6)",
     responsibilities: [
       { task: "Design and development of team branding", level: "A" },
-      { task: "Production of M+E Portfolio", level: "R + A" },
+      { task: "Nationals portfolio design (E&M + Engineering)", level: "R + A" },
+      { task: "Pit display design & production", level: "R + A" },
       { task: "Verbal presentation slides", level: "R + A" },
       { task: "Car livery and rendering", level: "R + A" },
-      { task: "Pit display layout & design", level: "C" },
       { task: "Brand identity & style guide", level: "R + A" },
       { task: "Contact and securing sponsors", level: "A" }
     ],
     skills: [
+      { name: "Portfolio Design", level: 96 },
+      { name: "Pit Display Design", level: 93 },
       { name: "Brand Design", level: 95 },
       { name: "Visual Identity", level: 92 },
-      { name: "Presentation Design", level: 90 },
-      { name: "3D Rendering", level: 85 },
-      { name: "Portfolio Layout", level: 88 }
+      { name: "Presentation Design", level: 90 }
     ],
     achievements: ["Brand Designer", "Creative Director", "Visual Artist"],
     email: null

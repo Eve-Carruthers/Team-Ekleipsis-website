@@ -8,9 +8,9 @@ export default function Footer() {
     h(
       "div",
       { className: "socials" },
-      h("a", { href: "#", className: "social-link" }, "Instagram"),
-      h("a", { href: "#", className: "social-link" }, "YouTube"),
-      h("a", { href: "#", className: "social-link" }, "LinkedIn")
+      h("a", { href: "https://instagram.com/Ekleipsisracing", target: "_blank", rel: "noopener noreferrer", className: "social-link" }, "Instagram"),
+      h("a", { href: "https://linkedin.com/company/team-ekleipsis", target: "_blank", rel: "noopener noreferrer", className: "social-link" }, "LinkedIn"),
+      h("a", { href: "https://x.com/TeamEkleipsis", target: "_blank", rel: "noopener noreferrer", className: "social-link" }, "X")
     )
   );
 }

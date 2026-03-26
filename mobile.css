@@ -1,0 +1,1330 @@
+/* =============================================
+   TEAM EKLEIPSIS - RESPONSIVE LAYOUT v10
+   Mobile (<=768px) + Tablet (769-1024px)
+   ============================================= */
+
+/* ==============================================
+   MOBILE (max-width: 768px)
+   Bottom dock with swipeable controls, car forward
+   ============================================= */
+@media screen and (max-width: 768px) {
+
+    /* =============================================
+       GLOBAL
+       ============================================= */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Kill non-essential animations (preserve loading screen) */
+    #scroll-container *,
+    #pin-overlay *,
+    .mouse-glow {
+        animation: none !important;
+        animation-delay: 0s !important;
+    }
+
+    /* =============================================
+       NAVBAR
+       ============================================= */
+    #navbar {
+        padding: 0 15px !important;
+        height: 50px !important;
+    }
+
+    .nav-brand img {
+        height: 28px !important;
+    }
+
+    .brand-info {
+        display: none !important;
+    }
+
+    .nav-links {
+        display: none !important;
+    }
+
+    #theme-toggle {
+        padding: 4px 8px !important;
+        font-size: 8px !important;
+    }
+
+    /* =============================================
+       SECTIONS
+       ============================================= */
+    .section {
+        position: relative !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-end !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* =============================================
+       HERO
+       ============================================= */
+    #hero {
+        justify-content: flex-start !important;
+        padding: 70px 20px 100px 20px !important;
+    }
+
+    .hero-content {
+        position: relative !important;
+        z-index: 10;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .hero-badge {
+        font-size: 7px !important;
+        padding: 4px 8px !important;
+    }
+
+    .hero-title {
+        text-align: center !important;
+    }
+
+    .hero-title .line1 {
+        font-size: 20px !important;
+        letter-spacing: 2px !important;
+    }
+
+    .hero-title .line2 {
+        font-size: 32px !important;
+    }
+
+    .hero-subtitle {
+        font-size: 11px !important;
+        text-align: center !important;
+    }
+
+    .hero-subtitle--finalists {
+        font-size: 10px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .hero-tagline {
+        font-size: 10px !important;
+        text-align: center !important;
+        margin-bottom: 20px !important;
+    }
+
+    .hero-stats {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        justify-content: center !important;
+        margin-top: 15px !important;
+    }
+
+    .stat-value {
+        font-size: 18px !important;
+    }
+
+    .stat-label {
+        font-size: 7px !important;
+    }
+
+    .scroll-indicator {
+        display: none !important;
+    }
+
+    #integration {
+        justify-content: center !important;
+        padding: 0 16px !important;
+    }
+
+    .integration-shell {
+        width: calc(100vw - 24px) !important;
+        border-radius: 14px !important;
+        padding: 14px 12px !important;
+    }
+
+    .integration-title {
+        font-size: 18px !important;
+        letter-spacing: 2px !important;
+    }
+
+    .integration-subtitle {
+        font-size: 10px !important;
+        line-height: 1.5 !important;
+    }
+
+    .integration-mode-toggle {
+        width: 100% !important;
+        display: flex !important;
+        gap: 8px !important;
+    }
+
+    .integration-mode-btn {
+        flex: 1 1 50% !important;
+        font-size: 8px !important;
+        letter-spacing: 1.2px !important;
+        padding: 8px 8px !important;
+    }
+
+    .integration-build-layout {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        min-height: auto !important;
+    }
+
+    .integration-blueprint {
+        min-height: 240px !important;
+    }
+
+    .integration-picker {
+        min-height: auto !important;
+        padding: 10px !important;
+    }
+
+    .integration-picker__list {
+        max-height: 180px !important;
+    }
+
+    .integration-part-btn {
+        padding: 8px !important;
+    }
+
+    .integration-part-btn__name {
+        font-size: 9px !important;
+    }
+
+    .integration-part-btn__hint {
+        font-size: 8px !important;
+    }
+
+    .integration-zone {
+        min-width: 62px !important;
+        padding: 5px 6px !important;
+    }
+
+    .integration-zone__label {
+        font-size: 7px !important;
+        letter-spacing: 0.9px !important;
+    }
+
+    .integration-auto-layout {
+        min-height: 240px !important;
+    }
+
+    .integration-auto-note {
+        padding: 14px 12px !important;
+    }
+
+    .integration-auto-note p {
+        font-size: 10px !important;
+    }
+
+    .integration-auto-btn {
+        font-size: 9px !important;
+        letter-spacing: 1.4px !important;
+        padding: 10px 14px !important;
+    }
+
+    /* Blueprint labels - hide on mobile */
+    .blueprint-overlay {
+        display: none !important;
+    }
+
+    /* Champion badge - reposition for mobile */
+    .champion-badge {
+        top: auto !important;
+        bottom: 80px !important;
+        right: 20px !important;
+        left: 20px !important;
+        justify-content: center !important;
+        padding: 8px 12px !important;
+    }
+
+    .champion-badge__text {
+        font-size: 8px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    .champion-badge__icon {
+        font-size: 11px !important;
+    }
+
+    /* =============================================
+       HIDE ALL LEFT/TOP PANELS
+       Only show bottom dock controls
+       ============================================= */
+    .eng-left-panel {
+        display: none !important;
+    }
+
+    /* =============================================
+       ENGINEERING - Bottom Dock
+       ============================================= */
+    .eng-right-panel {
+        position: sticky !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        border-radius: 20px 20px 0 0 !important;
+        background: rgba(10, 10, 15, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        z-index: 100 !important;
+        box-sizing: border-box !important;
+    }
+
+    .eng-right-panel h3 {
+        font-size: 9px !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+        text-transform: uppercase !important;
+        letter-spacing: 2px !important;
+        opacity: 0.6 !important;
+    }
+
+    /* Specs - horizontal swipe */
+    .specs-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding: 5px 0 !important;
+        -webkit-overflow-scrolling: touch !important;
+        scroll-snap-type: x mandatory !important;
+        scrollbar-width: none !important;
+    }
+
+    .specs-grid::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .spec-item {
+        flex: 0 0 75px !important;
+        min-width: 75px !important;
+        padding: 10px 8px !important;
+        border-radius: 12px !important;
+        scroll-snap-align: start !important;
+        text-align: center !important;
+    }
+
+    .spec-label {
+        font-size: 6px !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
+
+    .spec-value {
+        font-size: 16px !important;
+        display: block !important;
+    }
+
+    .spec-value small {
+        font-size: 8px !important;
+    }
+
+    /* =============================================
+       AERO - Mobile Layout
+       ============================================= */
+    .aero-overlay {
+        padding: 30px 16px 30px !important;
+        justify-content: space-between !important;
+    }
+
+    .aero-header {
+        padding-top: 20px !important;
+    }
+
+    .aero-title {
+        font-size: 22px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .aero-quote {
+        font-size: 11px !important;
+        max-width: 90% !important;
+    }
+
+    .cfd-hud {
+        gap: 10px !important;
+    }
+
+    .cfd-item {
+        flex: 1 1 calc(50% - 10px) !important;
+        max-width: calc(50% - 5px) !important;
+        padding: 14px 10px !important;
+    }
+
+    .cfd-value {
+        font-size: 20px !important;
+    }
+
+    .cfd-unit {
+        font-size: 10px !important;
+    }
+
+    .cfd-label {
+        font-size: 7px !important;
+        opacity: 0.6 !important;
+    }
+
+    /* =============================================
+       SPONSORS
+       ============================================= */
+    .sponsors-section {
+        padding: 50px 0 !important;
+        min-height: auto !important;
+    }
+
+    .sp-container {
+        padding: 0 16px !important;
+    }
+
+    .sp-header {
+        margin-bottom: 40px !important;
+    }
+
+    .sp-header__num {
+        font-size: 10px !important;
+    }
+
+    .sp-header__title {
+        font-size: 22px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .sp-tier {
+        margin-bottom: 30px !important;
+    }
+
+    .sp-tier__label {
+        font-size: 9px !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 14px !important;
+    }
+
+    /* Gold: stack vertically on mobile */
+    .sp-tier__grid--gold {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    /* Technical: 2 columns on mobile */
+    .sp-tier__grid--technical {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    /* Returning: stack vertically */
+    .sp-tier__grid--returning {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    /* Supporting: full width */
+    .sp-tier__grid--supporting {
+        max-width: 100% !important;
+    }
+
+    .sp-card {
+        padding: 20px 14px 18px !important;
+        border-radius: 12px !important;
+        gap: 8px !important;
+    }
+
+    .sp-card--gold {
+        padding: 24px 16px 20px !important;
+    }
+
+    .sp-card__logo {
+        min-height: 40px !important;
+    }
+
+    .sp-card--gold .sp-card__logo {
+        min-height: 50px !important;
+    }
+
+    .sp-card__logo img {
+        max-height: 40px !important;
+    }
+
+    .sp-card--gold .sp-card__logo img {
+        max-height: 50px !important;
+    }
+
+    .sp-card__name-visual {
+        font-size: 12px !important;
+    }
+
+    .sp-card--gold .sp-card__name-visual {
+        font-size: 15px !important;
+    }
+
+    .sp-card__name {
+        font-size: 11px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .sp-card--gold .sp-card__name {
+        font-size: 13px !important;
+    }
+
+    .sp-card__desc {
+        font-size: 10px !important;
+        max-width: 100% !important;
+    }
+
+    .sp-returning-badge {
+        font-size: 7px !important;
+        padding: 2px 6px !important;
+        top: 8px !important;
+        right: 8px !important;
+    }
+
+    /* =============================================
+       TEAM
+       ============================================= */
+    #team {
+        padding: 40px 0 !important;
+        min-height: auto !important;
+    }
+
+    .team-container {
+        padding: 15px !important;
+    }
+
+    .team-header {
+        text-align: center !important;
+        margin-bottom: 25px !important;
+    }
+
+    .team-title {
+        font-size: 22px !important;
+    }
+
+    .team-subtitle {
+        font-size: 11px !important;
+    }
+
+    .team-motto {
+        font-size: 10px !important;
+    }
+
+    .team-hint {
+        font-size: 9px !important;
+    }
+
+    .team-cards-grid {
+        gap: 15px !important;
+        justify-content: center !important;
+    }
+
+    .team-card {
+        width: 260px !important;
+        height: 340px !important;
+    }
+
+    .card-front-content,
+    .card-back-content {
+        padding: 18px !important;
+    }
+
+    .card-number {
+        font-size: 30px !important;
+    }
+
+    .card-logo-wrap {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .member-name {
+        font-size: 16px !important;
+    }
+
+    .team-card-expanded-overlay {
+        padding: 10px !important;
+    }
+
+    .team-card-expanded {
+        max-height: 92vh !important;
+        border-radius: 16px !important;
+    }
+
+    .expanded-header {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 18px 15px !important;
+        gap: 8px !important;
+    }
+
+    .expanded-avatar {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 22px !important;
+    }
+
+    .expanded-title h2 {
+        font-size: 16px !important;
+    }
+
+    .expanded-content {
+        padding: 15px !important;
+    }
+
+    .brand-colors {
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        justify-content: center !important;
+    }
+
+    .color-swatch {
+        width: 85px !important;
+        padding: 12px 8px !important;
+    }
+
+    .social-links-grid {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .social-link-card {
+        width: 100% !important;
+        max-width: 220px !important;
+    }
+
+    /* =============================================
+       LOADING SCREEN (mobile adjustments)
+       ============================================= */
+    .eclipse-rings {
+        transform: scale(0.6) !important;
+    }
+
+    .loading-logo {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .loading-title {
+        font-size: 18px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .loading-tagline {
+        font-size: 10px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    .loading-progress-wrap {
+        width: 200px !important;
+    }
+
+    .loading-watermark {
+        font-size: 120px !important;
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    #footer {
+        padding: 15px !important;
+        text-align: center !important;
+    }
+
+    .socials {
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    .social-link {
+        font-size: 8px !important;
+    }
+
+    /* =============================================
+       UTILITIES - HIDE
+       ============================================= */
+    #speed-indicator {
+        display: none !important;
+    }
+
+    #debug-panel {
+        display: none !important;
+    }
+
+    .mouse-glow {
+        display: none !important;
+    }
+
+    .view-hint {
+        display: none !important;
+    }
+
+    #progress-bar {
+        height: 2px !important;
+    }
+
+    /* =============================================
+       HUD - positioned above bottom dock
+       ============================================= */
+    .component-hud {
+        position: fixed !important;
+        left: 15px !important;
+        right: 15px !important;
+        bottom: 100px !important;
+        top: auto !important;
+        transform: none !important;
+        width: auto !important;
+        z-index: 200 !important;
+    }
+
+    .hud-connector {
+        display: none !important;
+    }
+
+    .hud-content {
+        transform: none !important;
+        width: 100% !important;
+        padding: 15px !important;
+        border-radius: 12px !important;
+        background: rgba(10, 10, 15, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+    }
+
+    .hud-close-btn {
+        min-width: 32px !important;
+        min-height: 32px !important;
+        font-size: 18px !important;
+    }
+
+    /* =============================================
+       HOTSPOTS
+       ============================================= */
+    .hotspot-pin {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* =============================================
+       ACHIEVEMENTS
+       ============================================= */
+    .achievements-section {
+        padding: 50px 15px !important;
+    }
+
+    .achievements-header {
+        margin-bottom: 30px !important;
+    }
+
+    .achievements-title {
+        font-size: 20px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .ach-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin-bottom: 24px !important;
+    }
+
+    .ach-stat-card {
+        padding: 14px 8px !important;
+    }
+
+    .ach-stat-value {
+        font-size: 28px !important;
+    }
+
+    .ach-stat-value--sm {
+        font-size: 22px !important;
+    }
+
+    .ach-stat-label {
+        font-size: 10px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .ach-stat-detail {
+        font-size: 9px !important;
+    }
+
+    .achievements-footer {
+        font-size: 9px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    /* =============================================
+       CANVAS
+       ============================================= */
+    #canvas {
+        z-index: 1 !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .integration-build-stage {
+        min-height: 280px !important;
+    }
+
+    .integration-blueprint--mesh {
+        min-height: 280px !important;
+    }
+
+    .integration-drawer-toggle {
+        top: 56px !important;
+        right: 8px !important;
+        font-size: 8px !important;
+        padding: 6px 9px !important;
+    }
+
+    .integration-picker--drawer {
+        top: 88px !important;
+        right: 0 !important;
+        width: min(300px, calc(100vw - 12px)) !important;
+        height: calc(100vh - 94px) !important;
+        transform: translateX(calc(100% - 42px)) !important;
+    }
+
+    .integration-picker--drawer.open {
+        transform: translateX(0) !important;
+    }
+
+    .eng-right-panel.isolation-hud {
+        position: absolute !important;
+        top: 50% !important;
+        left: auto !important;
+        right: 8px !important;
+        bottom: auto !important;
+        width: min(240px, calc(100vw - 16px)) !important;
+        transform: translateY(-50%) !important;
+        border-radius: 14px !important;
+        z-index: 120 !important;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .integration-build-stage {
+        min-height: 390px !important;
+    }
+
+    .integration-blueprint--mesh {
+        min-height: 390px !important;
+    }
+
+    .integration-picker--drawer {
+        width: min(300px, calc(100vw - 24px)) !important;
+        top: 112px !important;
+        right: 0 !important;
+    }
+
+    .eng-right-panel.isolation-hud {
+        right: 18px !important;
+        left: auto !important;
+        width: 220px !important;
+    }
+}
+
+/* =============================================
+   SMALL SCREENS (< 380px)
+   ============================================= */
+@media screen and (max-width: 380px) {
+    .hero-title .line1 {
+        font-size: 18px !important;
+    }
+
+    .hero-title .line2 {
+        font-size: 28px !important;
+    }
+
+    .spec-item {
+        flex: 0 0 65px !important;
+        min-width: 65px !important;
+    }
+
+    .team-card {
+        width: 240px !important;
+        height: 320px !important;
+    }
+
+    .sp-tier__grid--technical {
+        grid-template-columns: 1fr !important;
+    }
+
+    .ach-stat-value {
+        font-size: 24px !important;
+    }
+
+    .ach-stat-value--sm {
+        font-size: 20px !important;
+    }
+
+    .ach-stat-label {
+        font-size: 9px !important;
+    }
+
+    .ach-stats-grid {
+        gap: 8px !important;
+    }
+}
+
+/* =============================================
+   TOUCH DEVICES
+   ============================================= */
+@media (pointer: coarse) {
+    .spec-item,
+    .sp-card {
+        min-height: 44px !important;
+    }
+}
+
+/* =============================================
+   LANDSCAPE MOBILE
+   ============================================= */
+@media screen and (max-height: 500px) and (max-width: 900px) {
+    .section {
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+    }
+
+    /* Compact bottom docks in landscape */
+    .eng-right-panel {
+        padding: 10px 15px !important;
+        border-radius: 14px 14px 0 0 !important;
+    }
+
+    .eng-right-panel h3 {
+        margin-bottom: 6px !important;
+    }
+
+    /* Smaller specs in landscape */
+    .spec-item {
+        padding: 6px 5px !important;
+    }
+
+    .spec-value {
+        font-size: 14px !important;
+    }
+
+    /* Compact hero in landscape */
+    #hero {
+        padding: 50px 20px 60px 20px !important;
+    }
+
+    .hero-title .line2 {
+        font-size: 26px !important;
+    }
+
+    .hero-stats {
+        margin-top: 10px !important;
+    }
+
+    /* HUD closer to dock */
+    .component-hud {
+        bottom: 70px !important;
+    }
+}
+
+/* ==============================================
+   TABLET (769px - 1024px)
+   Side panels narrower, car slightly offset
+   ============================================= */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+
+    /* =============================================
+       GLOBAL
+       ============================================= */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* =============================================
+       NAVBAR
+       ============================================= */
+    #navbar {
+        padding: 0 20px !important;
+        height: 60px !important;
+    }
+
+    .nav-brand img {
+        height: 30px !important;
+    }
+
+    .brand-info strong {
+        font-size: 12px !important;
+    }
+
+    .brand-info span {
+        font-size: 8px !important;
+    }
+
+    .nav-links {
+        gap: 20px !important;
+    }
+
+    .nav-link {
+        font-size: 10px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    #theme-toggle {
+        padding: 5px 10px !important;
+        font-size: 9px !important;
+    }
+
+    /* =============================================
+       HERO
+       ============================================= */
+    #hero {
+        padding-left: 50px !important;
+    }
+
+    .hero-content {
+        max-width: 450px !important;
+    }
+
+    .hero-badge {
+        font-size: 8px !important;
+        padding: 5px 12px !important;
+    }
+
+    .hero-title .line1 {
+        font-size: 28px !important;
+        letter-spacing: 4px !important;
+    }
+
+    .hero-title .line2 {
+        font-size: 48px !important;
+    }
+
+    .hero-subtitle {
+        font-size: 12px !important;
+    }
+
+    .hero-subtitle--finalists {
+        font-size: 11px !important;
+    }
+
+    .hero-tagline {
+        font-size: 11px !important;
+        margin-bottom: 30px !important;
+    }
+
+    .hero-stats {
+        gap: 30px !important;
+    }
+
+    #integration {
+        padding: 0 40px !important;
+    }
+
+    .integration-shell {
+        width: calc(100vw - 64px) !important;
+        padding: 18px 16px !important;
+    }
+
+    .integration-title {
+        font-size: 24px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .integration-subtitle {
+        font-size: 11px !important;
+    }
+
+    .integration-build-layout {
+        grid-template-columns: minmax(0, 1fr) 250px !important;
+        min-height: 360px !important;
+    }
+
+    .integration-blueprint,
+    .integration-picker,
+    .integration-auto-layout {
+        min-height: 360px !important;
+    }
+
+    .integration-zone {
+        min-width: 70px !important;
+        padding: 6px 8px !important;
+    }
+
+    .integration-zone__label {
+        font-size: 7px !important;
+    }
+
+    .stat-value {
+        font-size: 22px !important;
+    }
+
+    .stat-label {
+        font-size: 8px !important;
+    }
+
+    /* Blueprint labels - smaller on tablet */
+    .blueprint-text {
+        font-size: 8px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    .blueprint-line {
+        max-width: 35px !important;
+    }
+
+    /* Champion badge - tablet position */
+    .champion-badge {
+        top: 80px !important;
+        right: 50px !important;
+        padding: 8px 14px !important;
+    }
+
+    .champion-badge__text {
+        font-size: 9px !important;
+        letter-spacing: 2px !important;
+    }
+
+    /* =============================================
+       ENGINEERING / AERO PANELS
+       ============================================= */
+    /* Left panels - narrower */
+    .eng-left-panel {
+        width: 200px !important;
+        left: 25px !important;
+        padding: 20px !important;
+    }
+
+    .eng-left-panel .panel-header h2 {
+        font-size: 18px !important;
+        letter-spacing: 3px !important;
+    }
+
+    .eng-left-panel .panel-header p {
+        font-size: 10px !important;
+    }
+
+    .section-num {
+        font-size: 10px !important;
+    }
+
+    /* View mode buttons */
+    .toggle-btn-lg {
+        padding: 8px 14px !important;
+        font-size: 10px !important;
+    }
+
+    /* Right panels - narrower */
+    .eng-right-panel {
+        width: 200px !important;
+        right: 20px !important;
+        left: auto !important;
+        padding: 18px !important;
+    }
+
+    .eng-right-panel h3 {
+        font-size: 10px !important;
+    }
+
+    /* Specs grid - smaller items */
+    .specs-grid {
+        gap: 8px !important;
+    }
+
+    .spec-item {
+        padding: 10px 8px !important;
+    }
+
+    .spec-label {
+        font-size: 7px !important;
+    }
+
+    .spec-value {
+        font-size: 20px !important;
+    }
+
+    .spec-value small {
+        font-size: 9px !important;
+    }
+
+    /* Aero - tablet adjustments */
+    .cfd-item {
+        padding: 18px 14px !important;
+    }
+
+    .cfd-value {
+        font-size: 26px !important;
+    }
+
+    /* =============================================
+       SPONSORS
+       ============================================= */
+    .sponsors-section {
+        padding: 60px 0 !important;
+    }
+
+    .sp-container {
+        padding: 0 30px !important;
+    }
+
+    .sp-header__title {
+        font-size: 28px !important;
+        letter-spacing: 4px !important;
+    }
+
+    /* Technical: 3 columns on tablet */
+    .sp-tier__grid--technical {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 16px !important;
+    }
+
+    .sp-card__name {
+        font-size: 12px !important;
+    }
+
+    .sp-card__desc {
+        font-size: 11px !important;
+    }
+
+    /* =============================================
+       TEAM
+       ============================================= */
+    #team {
+        padding: 50px 0 !important;
+    }
+
+    .team-container {
+        padding: 0 30px !important;
+    }
+
+    .team-title {
+        font-size: 26px !important;
+    }
+
+    .team-subtitle {
+        font-size: 12px !important;
+    }
+
+    .team-cards-grid {
+        gap: 25px !important;
+    }
+
+    .team-card {
+        width: 280px !important;
+        height: 370px !important;
+    }
+
+    .card-number {
+        font-size: 36px !important;
+    }
+
+    .card-logo-wrap {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .member-name {
+        font-size: 18px !important;
+    }
+
+    .team-card-expanded-overlay {
+        padding: 20px !important;
+    }
+
+    .team-card-expanded {
+        max-height: 90vh !important;
+        max-width: 600px !important;
+    }
+
+    .expanded-header {
+        padding: 25px 20px !important;
+    }
+
+    .expanded-avatar {
+        width: 65px !important;
+        height: 65px !important;
+    }
+
+    .expanded-title h2 {
+        font-size: 20px !important;
+    }
+
+    .expanded-content {
+        padding: 20px !important;
+    }
+
+    /* =============================================
+       ACHIEVEMENTS
+       ============================================= */
+    .achievements-section {
+        padding: 60px 30px !important;
+    }
+
+    .achievements-title {
+        font-size: 26px !important;
+        letter-spacing: 5px !important;
+    }
+
+    .ach-stat-value {
+        font-size: 40px !important;
+    }
+
+    .ach-stat-value--sm {
+        font-size: 30px !important;
+    }
+
+    .ach-stats-grid {
+        gap: 20px !important;
+    }
+
+    /* =============================================
+       HUD
+       ============================================= */
+    .component-hud {
+        max-width: 350px !important;
+    }
+
+    .hud-content {
+        padding: 18px !important;
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    #footer {
+        padding: 20px 30px !important;
+    }
+
+    .socials {
+        gap: 15px !important;
+    }
+
+    .social-link {
+        font-size: 9px !important;
+    }
+
+    /* =============================================
+       UTILITIES
+       ============================================= */
+    .mouse-glow {
+        display: none !important;
+    }
+
+    #debug-panel {
+        display: none !important;
+    }
+
+    #progress-bar {
+        height: 2px !important;
+    }
+
+    .scroll-indicator span {
+        font-size: 9px !important;
+    }
+}

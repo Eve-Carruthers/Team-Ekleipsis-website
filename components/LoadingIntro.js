@@ -6,7 +6,7 @@ export default function LoadingIntro() {
   const [loadingText, setLoadingText] = useState("INITIALIZING");
 
   useEffect(() => {
-    const texts = ["INITIALIZING SYSTEMS", "LOADING 3D ASSETS", "PREPARING CAR MODEL", "CALIBRATING CFD", "ALMOST READY"];
+    const texts = ["Initializing...", "Loading EK5 Components...", "Assembling Vehicle...", "Calibrating Systems...", "Ready for Nationals"];
     let current = 0;
 
     const interval = setInterval(() => {
@@ -30,9 +30,6 @@ export default function LoadingIntro() {
   }, []);
 
   return h("div", { id: "loading-screen" },
-    // EK3 Watermark Background
-    h("div", { className: "loading-watermark" }, "EK3"),
-
     // Animated eclipse rings
     h("div", { className: "eclipse-rings" },
       h("div", { className: "eclipse-ring ring-1" }),

@@ -1,98 +1,106 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 const h = React.createElement;
 
-export default function Aero({ preset, applyPreset, downforce, drag, eff, lam, presets, aeroRotation, setAeroRotation }) {
-  const rotationDeg = ((aeroRotation || 0) * 180 / Math.PI).toFixed(0);
+const CFD_DATA = [
+  { label: "Drag Coefficient", value: 0.19, unit: "Cd", decimals: 2 },
+  { label: "Lift Coefficient", value: 0.02, unit: "Cl", decimals: 2 },
+  { label: "Downforce", value: 1.8, unit: "N", decimals: 1 },
+  { label: "Frontal Area", value: 0.00151, unit: "m\u00B2", decimals: 5 },
+  { label: "Flow Velocity", value: 28.5, unit: "m/s", decimals: 1 },
+];
 
+function AnimatedValue({ target, decimals, duration = 1800 }) {
+  const [current, setCurrent] = useState(0);
+  const [started, setStarted] = useState(false);
+  const ref = useRef(null);
+
+  // Intersection Observer to trigger count-up when visible
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started) {
+          setStarted(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [started]);
+
+  // Animate from 0 to target
+  useEffect(() => {
+    if (!started) return;
+    let startTime = null;
+    let raf;
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCurrent(eased * target);
+      if (progress < 1) {
+        raf = requestAnimationFrame(animate);
+      }
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, [started, target, duration]);
+
+  return h("span", { ref }, current.toFixed(decimals));
+}
+
+export default function Aero() {
   return h(
     "section",
     { id: "aero", className: "section aero-section" },
-    // Left panel - Controls and presets
+
+    // Content overlay
     h(
       "div",
-      { className: "aero-controls-panel aero-left-panel" },
+      { className: "aero-overlay" },
+
+      // Section header
       h(
         "div",
-        { className: "panel-header" },
+        { className: "aero-header" },
         h("span", { className: "section-num" }, "02"),
-        h("h2", null, "AERO"),
-        h("p", null, "Wind tunnel test")
-      ),
-      h(
-        "div",
-        { className: "preset-section" },
-        h("h4", { className: "preset-title" }, "WIND INTENSITY"),
+        h("h2", { className: "aero-title" }, "AERODYNAMICS"),
         h(
-          "div",
-          { className: "preset-grid-aero" },
-          ...Object.entries(presets).map(([k, v]) =>
-            h(
-              "button",
-              {
-                key: k,
-                className: `preset-btn ${preset === k ? "active" : ""} ${k === "extreme" ? "extreme" : ""}`,
-                onClick: () => applyPreset(k)
-              },
-              v.label
-            )
-          )
+          "p",
+          { className: "aero-quote" },
+          "\u201CIf you analyse the function of an object, its form often becomes obvious.\u201D",
+          h("span", { className: "aero-quote-author" }, " \u2014 Ferdinand Porsche")
         )
       ),
+
+      // CFD Data HUD
       h(
         "div",
-        { className: "rotation-control" },
-        h("h4", { className: "preset-title" }, "ORBIT VIEW"),
-        h("div", { className: "rotation-slider-wrap" },
-          h("span", { className: "rotation-value" }, `${Math.round(((aeroRotation || 0) / (Math.PI * 2)) * 360)}°`),
-          h("input", {
-            type: "range",
-            min: 0,
-            max: Math.PI * 2,
-            step: 0.02,
-            value: aeroRotation || 0,
-            onChange: (e) => setAeroRotation && setAeroRotation(parseFloat(e.target.value))
-          })
-        ),
-        h("div", { className: "rotation-hint" }, "Orbit camera around the tunnel")
-      ),
-      h(
-        "div",
-        { className: "aero-legend" },
-        h("div", { className: "legend-item" }, h("span", { className: "dot slow" }), "Cool"),
-        h("div", { className: "legend-item" }, h("span", { className: "dot med" }), "Flow"),
-        h("div", { className: "legend-item" }, h("span", { className: "dot fast" }), "Heat")
-      )
-    ),
-    // Bottom panel - Statistics (below the car)
-    h(
-      "div",
-      { className: "aero-stats-panel aero-bottom-panel" },
-      h(
-        "div",
-        { className: "aero-data-horizontal" },
-        h(
-          "div",
-          { className: "data-item-h" },
-          h("span", { className: "data-label" }, "DOWNFORCE"),
-          h("span", { className: "data-value" }, `${downforce}`, h("small", null, "N"))
-        ),
-        h(
-          "div",
-          { className: "data-item-h" },
-          h("span", { className: "data-label" }, "DRAG"),
-          h("span", { className: "data-value" }, drag.toFixed(2))
-        ),
-        h(
-          "div",
-          { className: "data-item-h" },
-          h("span", { className: "data-label" }, "EFF"),
-          h("span", { className: "data-value" }, `${eff}`, h("small", null, "%"))
-        ),
-        h(
-          "div",
-          { className: "data-item-h" },
-          h("span", { className: "data-label" }, "LAMINAR"),
-          h("span", { className: "data-value" }, `${lam}`, h("small", null, "%"))
+        { className: "cfd-hud" },
+        CFD_DATA.map((item, i) =>
+          h(
+            "div",
+            { className: "cfd-item", key: i },
+            h(
+              "div",
+              { className: "cfd-value-row" },
+              h(
+                "span",
+                { className: "cfd-value" },
+                h(AnimatedValue, {
+                  target: item.value,
+                  decimals: item.decimals,
+                  duration: 1800 + i * 200,
+                })
+              ),
+              h("span", { className: "cfd-unit" }, item.unit)
+            ),
+            h("span", { className: "cfd-label" }, item.label)
+          )
         )
       )
     )

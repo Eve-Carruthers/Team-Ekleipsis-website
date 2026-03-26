@@ -1,4 +1,5 @@
 import React from "react";
+
 const h = React.createElement;
 
 const VIEW_MODES = [
@@ -8,11 +9,28 @@ const VIEW_MODES = [
   { id: "vertex", label: "VERTEX" },
 ];
 
-export default function Engineering({ hud, setHud, viewMode, setViewMode }) {
+const CAR_SPECS = [
+  { label: "MASS", value: "~50g" },
+  { label: "LENGTH", value: "207mm" },
+  { label: "Cd", value: "0.05" },
+  { label: "TRACK", value: "30m" },
+  { label: "REACTION", value: "<20ms" },
+];
+
+export default function Engineering({
+  hud, setHud, viewMode, setViewMode, isolatedPart, setIsolatedPart,
+}) {
+  const showIsolation = !!(isolatedPart && hud && hud.visible);
+  const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
+  const closeIsolation = () => {
+    if (setIsolatedPart) setIsolatedPart(null);
+    if (setHud) setHud({ visible: false, title: "", specs: [], desc: "", x: 0, y: 0 });
+  };
+
   return h(
     "section",
     { id: "engineering", className: "section" },
-    // Left panel - View mode controls
     h(
       "div",
       { className: "eng-controls-panel eng-left-panel" },
@@ -41,60 +59,67 @@ export default function Engineering({ hud, setHud, viewMode, setViewMode }) {
       h(
         "div",
         { className: "view-hint" },
-        h("span", null, "Click hotspots on car to view component details")
+        h("span", null, "Click hotspots on car to isolate & inspect parts")
       )
     ),
-    // Right panel - Statistics only
-    h(
-      "div",
-      { className: "eng-stats-panel eng-right-panel" },
-      h(
-        "div",
-        { className: "panel-header center" },
-        h("h3", null, "SPECIFICATIONS")
-      ),
-      h(
-        "div",
-        { className: "specs-grid" },
-        h(
+
+    showIsolation
+      ? h(
           "div",
-          { className: "spec-item" },
-          h("span", { className: "spec-label" }, "LENGTH"),
-          h("span", { className: "spec-value" }, "2847", h("small", null, "mm"))
-        ),
-        h(
-          "div",
-          { className: "spec-item" },
-          h("span", { className: "spec-label" }, "WIDTH"),
-          h("span", { className: "spec-value" }, "1400", h("small", null, "mm"))
-        ),
-        h(
-          "div",
-          { className: "spec-item" },
-          h("span", { className: "spec-label" }, "HEIGHT"),
-          h("span", { className: "spec-value" }, "1150", h("small", null, "mm"))
-        ),
-        h(
-          "div",
-          { className: "spec-item" },
-          h("span", { className: "spec-label" }, "WHEELBASE"),
-          h("span", { className: "spec-value" }, "1600", h("small", null, "mm"))
-        ),
-        h(
-          "div",
-          { className: "spec-item" },
-          h("span", { className: "spec-label" }, "WEIGHT"),
-          h("span", { className: "spec-value" }, "178", h("small", null, "kg"))
-        ),
-        h(
-          "div",
-          { className: "spec-item" },
-          h("span", { className: "spec-label" }, "POWER"),
-          h("span", { className: "spec-value" }, "80", h("small", null, "kW"))
+          {
+            className: "eng-right-panel isolation-hud",
+            onClick: closeIsolation,
+          },
+          h("div", { className: "scan-line" }),
+          h("h3", { className: "isolation-title" }, hud.title || isolatedPart.replace(/_/g, " ").toUpperCase()),
+          h(
+            "div",
+            { className: "isolation-divider" },
+            h("span", { className: "divider-diamond" }),
+            h("span", { className: "divider-line" }),
+            h("span", { className: "divider-diamond" })
+          ),
+          h(
+            "div",
+            { className: "isolation-status" },
+            h("span", { className: "status-dot" }),
+            h("span", null, "DIAGNOSTIC ACTIVE")
+          ),
+          h(
+            "div",
+            { className: "isolation-specs" },
+            (hud.specs || []).map((s, i) =>
+              h(
+                "div",
+                {
+                  key: i,
+                  className: "isolation-spec-item",
+                  style: { animationDelay: `${0.15 + i * 0.12}s` },
+                },
+                h("span", { className: "iso-spec-index" }, `0${i + 1}`),
+                h("span", { className: "iso-spec-text" }, s)
+              )
+            )
+          ),
+          hud.desc
+            ? h(
+                "p",
+                {
+                  className: "isolation-desc",
+                  style: { animationDelay: `${0.15 + (hud.specs || []).length * 0.12 + 0.1}s` },
+                },
+                hud.desc
+              )
+            : null,
+          h(
+            "div",
+            { className: "isolation-close-hint" },
+            h("span", null, isTouch ? "TAP TO CLOSE" : "CLICK TO CLOSE")
+          )
         )
-      )
-    ),
-    hud.visible
+      : null,
+
+    !showIsolation && hud && hud.visible
       ? h(
           "div",
           {
@@ -112,20 +137,39 @@ export default function Engineering({ hud, setHud, viewMode, setViewMode }) {
                 className: "hud-close-btn",
                 onClick: (e) => {
                   e.stopPropagation();
-                  setHud && setHud({ visible: false, title: "", specs: [], desc: "", x: 0, y: 0 });
+                  if (setIsolatedPart) setIsolatedPart(null);
+                  if (setHud) setHud({ visible: false, title: "", specs: [], desc: "", x: 0, y: 0 });
                 },
               },
-              "×"
+              "\u00d7"
             ),
             h("h4", null, hud.title),
             h(
               "div",
               { className: "hud-specs" },
-              hud.specs.map((s, i) => h("span", { key: i, className: "spec-tag" }, s))
+              (hud.specs || []).map((s, i) => h("span", { key: i, className: "spec-tag" }, s))
             ),
             h("p", null, hud.desc)
           )
         )
-      : null
+      : null,
+
+    h(
+      "div",
+      { className: "specs-bar specs-bar--engineering-top" },
+      CAR_SPECS.map((s, i) =>
+        h(
+          React.Fragment,
+          { key: s.label },
+          i > 0 ? h("span", { className: "specs-bar-sep" }, "|") : null,
+          h(
+            "span",
+            { className: "specs-bar-item" },
+            h("span", { className: "specs-bar-label" }, `${s.label}: `),
+            h("span", { className: "specs-bar-value" }, s.value)
+          )
+        )
+      )
+    )
   );
 }

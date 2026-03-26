@@ -55,6 +55,7 @@ export default function Navbar({ theme, toggleTheme }) {
       { className: "nav-links" },
       h(MagneticLink, { href: "#engineering", className: "nav-link" }, "ENGINEERING"),
       h(MagneticLink, { href: "#aero", className: "nav-link" }, "AERODYNAMICS"),
+      h(MagneticLink, { href: "#sponsors", className: "nav-link" }, "PARTNERS"),
       h(MagneticLink, { href: "#team", className: "nav-link" }, "TEAM")
     ),
     h(
